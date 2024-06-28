@@ -1,7 +1,7 @@
-package edu.mcw.scge.dao;
+package edu.mcw.scge.platform.dao;
 
-import edu.mcw.scge.dao.spring.CountLongQuery;
-import edu.mcw.scge.dao.spring.CountQuery;
+import edu.mcw.scge.platform.dao.spring.CountLongQuery;
+import edu.mcw.scge.platform.dao.spring.CountQuery;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.jdbc.object.MappingSqlQuery;

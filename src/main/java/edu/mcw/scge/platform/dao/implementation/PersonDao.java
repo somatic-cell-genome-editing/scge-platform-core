@@ -1,15 +1,14 @@
-package edu.mcw.scge.dao.implementation;
+package edu.mcw.scge.platform.dao.implementation;
 
-import edu.mcw.scge.dao.AbstractDAO;
-import edu.mcw.scge.dao.spring.IntListQuery;
-import edu.mcw.scge.dao.spring.PersonInfoQuery;
-import edu.mcw.scge.dao.spring.PersonQuery;
-import edu.mcw.scge.dao.spring.StringListQuery;
-import edu.mcw.scge.datamodel.Grant;
-import edu.mcw.scge.datamodel.Person;
+import edu.mcw.scge.platform.dao.AbstractDAO;
+import edu.mcw.scge.platform.dao.spring.IntListQuery;
+import edu.mcw.scge.platform.dao.spring.PersonInfoQuery;
+import edu.mcw.scge.platform.dao.spring.PersonQuery;
+import edu.mcw.scge.platform.dao.spring.StringListQuery;
+import edu.mcw.scge.platform.datamodel.Person;
 
-import edu.mcw.scge.datamodel.PersonInfo;
-import edu.mcw.scge.datamodel.SCGEGroup;
+import edu.mcw.scge.platform.datamodel.PersonInfo;
+import edu.mcw.scge.platform.datamodel.SCGEGroup;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,10 +16,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

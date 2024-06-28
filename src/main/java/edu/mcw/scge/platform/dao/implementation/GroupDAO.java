@@ -1,19 +1,13 @@
-package edu.mcw.scge.dao.implementation;
+package edu.mcw.scge.platform.dao.implementation;
 
-import edu.mcw.scge.dao.AbstractDAO;
-import edu.mcw.scge.dao.spring.*;
-import edu.mcw.scge.datamodel.Person;
-import edu.mcw.scge.datamodel.PersonInfo;
-import edu.mcw.scge.datamodel.SCGEGroup;
+import edu.mcw.scge.platform.dao.AbstractDAO;
+import edu.mcw.scge.platform.dao.spring.PersonQuery;
+import edu.mcw.scge.platform.datamodel.Person;
+import edu.mcw.scge.platform.datamodel.SCGEGroup;
+import edu.mcw.scge.platform.dao.spring.GroupQuery;
+import edu.mcw.scge.platform.dao.spring.IntListQuery;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by jthota on 9/10/2019.

@@ -1,6 +1,6 @@
-package edu.mcw.scge.dao.spring;
+package edu.mcw.scge.platform.dao.spring;
 
-import edu.mcw.scge.dao.AbstractDAO;
+import edu.mcw.scge.platform.dao.AbstractDAO;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import javax.sql.DataSource;

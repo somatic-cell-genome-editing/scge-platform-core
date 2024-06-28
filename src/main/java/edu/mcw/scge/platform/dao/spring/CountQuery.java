@@ -1,4 +1,4 @@
-package edu.mcw.scge.dao.spring;
+package edu.mcw.scge.platform.dao.spring;
 
 import org.springframework.jdbc.object.MappingSqlQuery;
 
