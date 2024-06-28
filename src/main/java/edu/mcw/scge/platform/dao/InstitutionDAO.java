@@ -1,9 +1,9 @@
-package edu.mcw.scge.dao;
+package edu.mcw.scge.platform.dao;
 
-import edu.mcw.scge.dao.spring.InstitutionQuery;
-import edu.mcw.scge.dao.spring.IntListQuery;
-import edu.mcw.scge.dao.spring.StringListQuery;
-import edu.mcw.scge.datamodel.Institution;
+import edu.mcw.scge.platform.dao.spring.InstitutionQuery;
+import edu.mcw.scge.platform.dao.spring.IntListQuery;
+import edu.mcw.scge.platform.dao.spring.StringListQuery;
+import edu.mcw.scge.platform.datamodel.Institution;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package edu.mcw.scge.datamodel;
+package edu.mcw.scge.platform.datamodel;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package edu.mcw.scge.dao;
+package edu.mcw.scge.platform.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
