@@ -1,6 +1,6 @@
-package edu.mcw.scge.platform.dao.spring.ctd;
+package edu.mcw.scge.dao.spring.ctd;
 
-import edu.mcw.scge.platform.datamodel.ctd.Section;
+import edu.mcw.scge.datamodel.ctd.Section;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import javax.sql.DataSource;

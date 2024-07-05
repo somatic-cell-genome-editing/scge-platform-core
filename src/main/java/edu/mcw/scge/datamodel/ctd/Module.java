@@ -1,4 +1,4 @@
-package edu.mcw.scge.platform.datamodel.ctd;
+package edu.mcw.scge.datamodel.ctd;
 
 import java.util.List;
 

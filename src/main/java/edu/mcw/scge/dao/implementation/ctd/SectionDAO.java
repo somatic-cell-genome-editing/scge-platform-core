@@ -1,10 +1,10 @@
-package edu.mcw.scge.platform.dao.implementation.ctd;
+package edu.mcw.scge.dao.implementation.ctd;
 
-import edu.mcw.scge.platform.dao.AbstractDAO;
-import edu.mcw.scge.platform.dao.spring.StringListQuery;
-import edu.mcw.scge.platform.dao.spring.ctd.SectionQuery;
-import edu.mcw.scge.platform.datamodel.ctd.Module;
-import edu.mcw.scge.platform.datamodel.ctd.Section;
+import edu.mcw.scge.dao.spring.ctd.SectionQuery;
+import edu.mcw.scge.datamodel.ctd.Section;
+import edu.mcw.scge.dao.AbstractDAO;
+import edu.mcw.scge.dao.spring.StringListQuery;
+import edu.mcw.scge.datamodel.ctd.Module;
 
 import java.util.List;
 

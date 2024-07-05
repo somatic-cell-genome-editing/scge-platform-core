@@ -1,6 +1,6 @@
-package edu.mcw.scge.platform.dao.implementation;
+package edu.mcw.scge.dao.implementation;
 
-import edu.mcw.scge.platform.dao.AbstractDAO;
+import edu.mcw.scge.dao.AbstractDAO;
 
 import java.util.Date;
 

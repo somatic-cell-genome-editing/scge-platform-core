@@ -1,6 +1,6 @@
-package edu.mcw.scge.platform.process;
+package edu.mcw.scge.process;
 
-import edu.mcw.scge.platform.dao.DataSourceFactory;
+import edu.mcw.scge.dao.DataSourceFactory;
 
 
 //import javax.xml.bind.DatatypeConverter;

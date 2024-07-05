@@ -1,8 +1,8 @@
-package edu.mcw.scge.platform.dao.implementation;
+package edu.mcw.scge.dao.implementation;
 
-import edu.mcw.scge.platform.dao.AbstractDAO;
-import edu.mcw.scge.platform.dao.spring.IntListQuery;
-import edu.mcw.scge.platform.dao.spring.StringListQuery;
+import edu.mcw.scge.dao.spring.IntListQuery;
+import edu.mcw.scge.dao.AbstractDAO;
+import edu.mcw.scge.dao.spring.StringListQuery;
 
 import java.util.List;
 

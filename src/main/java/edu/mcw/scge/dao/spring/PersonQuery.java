@@ -1,7 +1,7 @@
-package edu.mcw.scge.platform.dao.spring;
+package edu.mcw.scge.dao.spring;
 
-import edu.mcw.scge.platform.dao.implementation.PersonDao;
-import edu.mcw.scge.platform.datamodel.Person;
+import edu.mcw.scge.dao.implementation.PersonDao;
+import edu.mcw.scge.datamodel.Person;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 

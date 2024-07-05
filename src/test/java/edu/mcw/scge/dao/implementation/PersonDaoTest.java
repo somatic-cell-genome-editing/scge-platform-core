@@ -1,6 +1,6 @@
-package edu.mcw.scge.platform.dao.implementation;
+package edu.mcw.scge.dao.implementation;
 
-import edu.mcw.scge.platform.datamodel.Person;
+import edu.mcw.scge.datamodel.Person;
 import org.junit.Assert;
 import org.junit.Test;
 

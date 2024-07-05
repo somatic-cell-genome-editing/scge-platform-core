@@ -1,4 +1,4 @@
-package edu.mcw.scge.platform.datamodel;
+package edu.mcw.scge.datamodel;
 
 import java.util.List;
 

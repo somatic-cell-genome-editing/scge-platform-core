@@ -1,7 +1,7 @@
-package edu.mcw.scge.platform.dao.spring;
+package edu.mcw.scge.dao.spring;
 
-import edu.mcw.scge.platform.dao.implementation.GrantDao;
-import edu.mcw.scge.platform.datamodel.Grant;
+import edu.mcw.scge.dao.implementation.GrantDao;
+import edu.mcw.scge.datamodel.Grant;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import javax.sql.DataSource;

@@ -1,4 +1,4 @@
-package edu.mcw.scge.platform.dao;
+package edu.mcw.scge.dao;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

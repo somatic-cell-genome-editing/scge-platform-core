@@ -1,7 +1,7 @@
-package edu.mcw.scge.platform.dao.spring;
+package edu.mcw.scge.dao.spring;
 
-import edu.mcw.scge.platform.dao.InstitutionDAO;
-import edu.mcw.scge.platform.datamodel.Institution;
+import edu.mcw.scge.dao.InstitutionDAO;
+import edu.mcw.scge.datamodel.Institution;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import javax.sql.DataSource;

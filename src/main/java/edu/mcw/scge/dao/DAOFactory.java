@@ -1,4 +1,4 @@
-package edu.mcw.scge.platform.dao;
+package edu.mcw.scge.dao;
 
 /**
  * Created by jthota on 8/16/2019.

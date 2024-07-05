@@ -1,4 +1,4 @@
-package edu.mcw.scge.platform.dao;
+package edu.mcw.scge.dao;
 
 import java.sql.Connection;
 
