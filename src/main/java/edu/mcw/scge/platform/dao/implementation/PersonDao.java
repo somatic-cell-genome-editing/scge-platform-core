@@ -9,12 +9,7 @@ import edu.mcw.scge.platform.datamodel.Person;
 
 import edu.mcw.scge.platform.datamodel.PersonInfo;
 import edu.mcw.scge.platform.datamodel.SCGEGroup;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -25,6 +20,26 @@ import java.util.regex.Pattern;
  */
 public class PersonDao extends AbstractDAO {
         GroupDAO gdao=new GroupDAO();
+
+        public boolean isAdmin(Person person) throws Exception {
+            String sql="select * from person p , person_info pi where " +
+                    " p.person_id=pi.person_id and" +
+                    " p.email_lc=?" +
+                    " and role_key in (select role_key from scge_roles where role=?)";
+            PersonQuery personQuery=new PersonQuery(this.getDataSource(), sql);
+            List<Person> personList=personQuery.execute(sql, person.getEmail_lc(), "admin");
+            return personList.size() > 0;
+
+        }
+    public boolean isDeveloper(Person person) throws Exception {
+        String sql="select * from person p , person_info pi where " +
+                " p.person_id=pi.person_id and" +
+                " p.email_lc=?" +
+                " and role_key in (select role_key from scge_roles where role=?)";
+        PersonQuery personQuery=new PersonQuery(this.getDataSource(), sql);
+        List<Person> personList=personQuery.execute(sql, person.getEmail_lc(), "developer");
+        return personList.size() > 0;
+    }
     public void insert(Person p) throws Exception {
 
         int newId = 0;
