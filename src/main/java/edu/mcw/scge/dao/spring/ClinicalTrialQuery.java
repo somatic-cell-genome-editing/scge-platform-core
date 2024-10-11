@@ -1,6 +1,5 @@
 package edu.mcw.scge.dao.spring;
 
-import edu.mcw.scge.datamodel.ClinicalTrialCuratedData;
 import edu.mcw.scge.datamodel.ClinicalTrialRecord;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
@@ -8,14 +7,14 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialCuratedData> {
+public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
 
     public ClinicalTrialQuery(DataSource ds, String sql){
         super(ds, sql);
     }
     @Override
-    protected ClinicalTrialCuratedData mapRow(ResultSet rs, int rowNum) throws SQLException {
-        ClinicalTrialCuratedData record=new ClinicalTrialCuratedData();
+    protected ClinicalTrialRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+        ClinicalTrialRecord record=new ClinicalTrialRecord();
        record.setNctId(rs.getString("nctid"));
        record.setDescription(rs.getString("description"));
         record.setInterventionName(rs.getString("intervention_name")) ;
@@ -59,6 +58,7 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialCuratedData
         record.setDose5(rs.getString("dose_5"));
             record.setRecentUpdates(rs.getString("recent_updates"));
         record.setPatents(rs.getString("patents"));
+        record.setCompoundName(rs.getString("compound_name"));
             return record;
     }
 }

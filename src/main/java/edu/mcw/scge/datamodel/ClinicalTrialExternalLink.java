@@ -5,6 +5,15 @@ public class ClinicalTrialExternalLink {
     private String type;
     private String link;
     private String nctId;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
