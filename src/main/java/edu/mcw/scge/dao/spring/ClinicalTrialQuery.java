@@ -22,7 +22,7 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
         record.setSponsor(rs.getString("sponsor"));
           record.setSponsorClass(rs.getString("sponsor_class"));
         record.setIndication(rs.getString("indication"));
-         record.setPhases(rs.getString("phases"));
+         record.setPhase(rs.getString("phases"));
         record.setEnrorllmentCount(rs.getInt("enrollment_count"));
         record.setLocations(rs.getString("locations"));
         record.setNumberOfLocations(rs.getInt("number_of_locations"));
@@ -30,12 +30,12 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
         record.setElibilityMinAge(rs.getString("eligibility_min_age"));
         record.setElibilityMaxAge(rs.getString("eligibity_max_age"));
 
-        record.setStandardAges(rs.getString("eligibility_std_age"));
+        record.setStandardAge(rs.getString("eligibility_std_age"));
         record.setIsFDARegulated(rs.getString("is_fda_regulated"));
        record.setBriefTitle(rs.getString("brief_title"));
        record.setOfficialTitle(rs.getString("official_title"));
        record.setNihReportLink(rs.getString("nih_report_link"));
-       record.setStatus(rs.getString("overall_status"));
+       record.setStudyStatus(rs.getString("overall_status"));
        record.setFirstSubmitDate(rs.getString("first_submit_date"));
        record.setEstimatedCompleteDate(rs.getString("estimated_completion_date"));
        record.setLastUpdatePostDate(rs.getString("last_update_post_date"));

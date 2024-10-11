@@ -91,19 +91,19 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getInterventionDescription(),
                 record.getSponsor(),
                 record.getSponsorClass(),
-                record.getPhases(),
+                record.getPhase(),
                 record.getEnrorllmentCount(),
                 record.getLocations(),
                 record.getNumberOfLocations(),
                 record.getEligibilitySex(),
                 record.getElibilityMinAge(),
                 record.getElibilityMaxAge(),
-                record.getStandardAges(),
+                record.getStandardAge(),
                 record.getIsFDARegulated(),
                 record.getBriefTitle(),
                 record.getOfficialTitle(),
                 record.getNihReportLink(),
-                record.getStatus(),
+                record.getStudyStatus(),
                 record.getFirstSubmitDate(),
                 record.getEstimatedCompleteDate(),
                 record.getLastUpdatePostDate(),
@@ -137,7 +137,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
     }
     public void updateAPIDataFields(ClinicalTrialRecord record) throws Exception {
         String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,indication=?,phases=?,enrollment_count=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=? where nctid=?";
-        this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(), record.getIndication(), record.getPhases(), record.getEnrorllmentCount(), record.getLocations(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAges(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(),record.getNctId());
+        this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(), record.getIndication(), record.getPhase(), record.getEnrorllmentCount(), record.getLocations(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAge(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStudyStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(),record.getNctId());
     }
 
    public void insertExternalLink(ClinicalTrialExternalLink link) throws Exception {
@@ -213,7 +213,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 if (conditionKeywords != null && !conditionKeywords.isEmpty())
                     record.setBrowseConditionTerms(conditionKeywords.stream().collect(Collectors.joining(", ")));
                 //    System.out.println("Phases:"+study.getProtocolSection().getDesignModule().getPhases()+"\tEnrollmentCount:"+study.getProtocolSection().getDesignModule().getEnrollmentInfo().getCount());
-                record.setPhases(String.join(", ", study.getProtocolSection().getDesignModule().getPhases()));
+                record.setPhase(String.join(", ", study.getProtocolSection().getDesignModule().getPhases()));
                 record.setEnrorllmentCount(study.getProtocolSection().getDesignModule().getEnrollmentInfo().getCount());
 
                 //   indexer.indexDocuments(object);
@@ -227,7 +227,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.setElibilityMinAge(study.getProtocolSection().getEligibilityModule().getMinimumAge());
                 record.setElibilityMaxAge(study.getProtocolSection().getEligibilityModule().getMaximumAge());
                 record.setHealthyVolunteers(study.getProtocolSection().getEligibilityModule().getHealthyVolunteers().toString());
-                record.setStandardAges(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
+                record.setStandardAge(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
 
 
                 record.setIsFDARegulated(String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug()));
@@ -245,7 +245,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
 
                     record.setNihReportLink(builder.toString());
                 }
-                record.setStatus(study.getProtocolSection().getStatusModule().getOverallStatus());
+                record.setStudyStatus(study.getProtocolSection().getStatusModule().getOverallStatus());
                 record.setFirstSubmitDate((study.getProtocolSection().getStatusModule().getStudyFirstSubmitDate()));
                 record.setEstimatedCompleteDate((study.getProtocolSection().getStatusModule().getCompletionDateStruct().getDate()));
                 record.setLastUpdatePostDate((study.getProtocolSection().getStatusModule().getLastUpdatePostDateStruct().getDate()));

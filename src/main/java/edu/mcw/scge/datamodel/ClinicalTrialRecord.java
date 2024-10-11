@@ -10,7 +10,7 @@ public class ClinicalTrialRecord {
     private String sponsor;
     private String sponsorClass;
     private String indication;
-    private String phases;
+    private String phase;
     private int enrorllmentCount;
     private String locations;
     private int numberOfLocations;
@@ -18,12 +18,12 @@ public class ClinicalTrialRecord {
     private String elibilityMinAge;
     private String elibilityMaxAge;
     private String healthyVolunteers;
-    private String standardAges;
+    private String standardAge;
     private String isFDARegulated;
     private String briefTitle;
     private String officialTitle;
     private String nihReportLink;
-    private String status;
+    private String studyStatus;
     private String firstSubmitDate;
     private String estimatedCompleteDate;
     private String lastUpdatePostDate;
@@ -109,13 +109,7 @@ public class ClinicalTrialRecord {
         this.indication = indication;
     }
 
-    public String getPhases() {
-        return phases;
-    }
 
-    public void setPhases(String phases) {
-        this.phases = phases;
-    }
 
     public int getEnrorllmentCount() {
         return enrorllmentCount;
@@ -167,13 +161,7 @@ public class ClinicalTrialRecord {
         this.healthyVolunteers = healthyVolunteers;
     }
 
-    public String getStandardAges() {
-        return standardAges;
-    }
 
-    public void setStandardAges(String standardAges) {
-        this.standardAges = standardAges;
-    }
 
     public String getIsFDARegulated() {
         return isFDARegulated;
@@ -215,12 +203,28 @@ public class ClinicalTrialRecord {
         this.elibilityMaxAge = elibilityMaxAge;
     }
 
-    public String getStatus() {
-        return status;
+    public String getPhase() {
+        return phase;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
+
+    public String getStandardAge() {
+        return standardAge;
+    }
+
+    public void setStandardAge(String standardAge) {
+        this.standardAge = standardAge;
+    }
+
+    public String getStudyStatus() {
+        return studyStatus;
+    }
+
+    public void setStudyStatus(String studyStatus) {
+        this.studyStatus = studyStatus;
     }
 
     public String getFirstSubmitDate() {
