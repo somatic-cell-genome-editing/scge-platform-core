@@ -18,6 +18,7 @@ public class ClinicalTrialExternalLinksQuery extends MappingSqlQuery<ClinicalTri
         link.setType(rs.getString("link_type"));
         link.setLink(rs.getString("link"));
         link.setNctId(rs.getString("nctid"));
+        link.setId(rs.getInt("id"));
         return link;
     }
 }
