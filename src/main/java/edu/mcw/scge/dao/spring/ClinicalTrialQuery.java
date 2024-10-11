@@ -1,6 +1,7 @@
 package edu.mcw.scge.dao.spring;
 
 import edu.mcw.scge.datamodel.ClinicalTrialRecord;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import javax.sql.DataSource;
@@ -24,7 +25,7 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
         record.setIndication(rs.getString("indication"));
          record.setPhase(rs.getString("phases"));
         record.setEnrorllmentCount(rs.getInt("enrollment_count"));
-        record.setLocations(rs.getString("locations"));
+        record.setLocation(rs.getString("locations"));
         record.setNumberOfLocations(rs.getInt("number_of_locations"));
         record.setEligibilitySex(rs.getString("eligibility_sex"));
         record.setElibilityMinAge(rs.getString("eligibility_min_age"));

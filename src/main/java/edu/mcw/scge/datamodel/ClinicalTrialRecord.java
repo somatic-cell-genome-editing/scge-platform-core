@@ -12,7 +12,7 @@ public class ClinicalTrialRecord {
     private String indication;
     private String phase;
     private int enrorllmentCount;
-    private String locations;
+    private String location;
     private int numberOfLocations;
     private String eligibilitySex;
     private String elibilityMinAge;
@@ -119,12 +119,13 @@ public class ClinicalTrialRecord {
         this.enrorllmentCount = enrorllmentCount;
     }
 
-    public String getLocations() {
-        return locations;
+
+    public String getLocation() {
+        return location;
     }
 
-    public void setLocations(String locations) {
-        this.locations = locations;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public int getNumberOfLocations() {
