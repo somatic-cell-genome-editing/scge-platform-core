@@ -171,6 +171,13 @@ public class ClinicalTrailDAO extends AbstractDAO {
         ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
         return execute(query, nctId);
     }
+
+    public ClinicalTrialRecord getSingleClinicalTrailRecordByNctId(String nctId) throws Exception{
+        String sql="select * from clinical_trial_record where nctid=?";
+        ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
+        List<ClinicalTrialRecord> ctRecord = execute(query, nctId);
+        return ctRecord.size()>0?ctRecord.get(0):null;
+    }
     public List<ClinicalTrialExternalLink> getExtLinksByNctId(String nctId) throws Exception {
         String sql="select * from clinical_trial_ext_links where nctid=?";
         ClinicalTrialExternalLinksQuery query=new ClinicalTrialExternalLinksQuery(this.getDataSource(), sql);
