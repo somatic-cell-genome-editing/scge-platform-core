@@ -1,6 +1,10 @@
 package edu.mcw.scge.datamodel;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClinicalTrialRecord {
     private String nctId;
@@ -94,6 +98,9 @@ public class ClinicalTrialRecord {
     }
 
     public String getSponsorClass() {
+        if(!sponsorClass.equals("")&&!sponsorClass.equalsIgnoreCase("NIH")){
+            return formatFieldVal(sponsorClass);
+        }
         return sponsorClass;
     }
 
@@ -165,7 +172,7 @@ public class ClinicalTrialRecord {
 
 
     public String getIsFDARegulated() {
-        return isFDARegulated;
+        return isFDARegulated!=null&&!isFDARegulated.equalsIgnoreCase("null")?StringUtils.capitalize(isFDARegulated):"";
     }
 
     public void setIsFDARegulated(String isFDARegulated) {
@@ -205,6 +212,9 @@ public class ClinicalTrialRecord {
     }
 
     public String getPhase() {
+        if(!phase.equals("")){
+            return formatFieldVal(phase);
+        }
         return phase;
     }
 
@@ -213,6 +223,9 @@ public class ClinicalTrialRecord {
     }
 
     public String getStandardAge() {
+        if(!standardAge.equals("")){
+            return formatFieldVal(standardAge);
+        }
         return standardAge;
     }
 
@@ -221,6 +234,9 @@ public class ClinicalTrialRecord {
     }
 
     public String getStudyStatus() {
+        if(!studyStatus.equals("")){
+            return formatFieldVal(studyStatus);
+        }
         return studyStatus;
     }
 
@@ -269,7 +285,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTargetGeneOrVariant() {
-        return targetGeneOrVariant;
+        return StringUtils.capitalize(targetGeneOrVariant);
     }
 
     public void setTargetGeneOrVariant(String targetGeneOrVariant) {
@@ -277,7 +293,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTherapyType() {
-        return therapyType;
+        return StringUtils.capitalize(therapyType);
     }
 
     public void setTherapyType(String therapyType) {
@@ -285,7 +301,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTherapyRoute() {
-        return therapyRoute;
+        return StringUtils.capitalize(therapyRoute);
     }
 
     public void setTherapyRoute(String therapyRoute) {
@@ -293,7 +309,8 @@ public class ClinicalTrialRecord {
     }
 
     public String getMechanismOfAction() {
-        return mechanismOfAction;
+
+        return StringUtils.capitalize(mechanismOfAction);
     }
 
     public void setMechanismOfAction(String mechanismOfAction) {
@@ -301,7 +318,8 @@ public class ClinicalTrialRecord {
     }
 
     public String getRouteOfAdministration() {
-        return routeOfAdministration;
+
+        return StringUtils.capitalize(routeOfAdministration);
     }
 
     public void setRouteOfAdministration(String routeOfAdministration) {
@@ -309,7 +327,8 @@ public class ClinicalTrialRecord {
     }
 
     public String getDrugProductType() {
-        return drugProductType;
+
+        return StringUtils.capitalize(drugProductType);
     }
 
     public void setDrugProductType(String drugProductType) {
@@ -317,7 +336,8 @@ public class ClinicalTrialRecord {
     }
 
     public String getTargetTissueOrCell() {
-        return targetTissueOrCell;
+
+        return StringUtils.capitalize(targetTissueOrCell);
     }
 
     public void setTargetTissueOrCell(String targetTissueOrCell) {
@@ -325,7 +345,8 @@ public class ClinicalTrialRecord {
     }
 
     public String getDeliverySystem() {
-        return deliverySystem;
+
+        return StringUtils.capitalize(deliverySystem);
     }
 
     public void setDeliverySystem(String deliverySystem) {
@@ -349,7 +370,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getRecentUpdates() {
-        return recentUpdates;
+        return recentUpdates!=null&&!recentUpdates.equalsIgnoreCase("null")?StringUtils.capitalize(recentUpdates):"";
     }
 
     public void setRecentUpdates(String recentUpdates) {
@@ -357,7 +378,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getCompoundName() {
-        return compoundName;
+        return StringUtils.capitalize(compoundName);
     }
 
     public void setCompoundName(String compoundName) {
@@ -365,7 +386,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDose1() {
-        return dose1;
+        return dose1.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose1);
     }
 
     public void setDose1(String dose1) {
@@ -373,7 +394,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDose2() {
-        return dose2;
+        return dose2.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose2);
     }
 
     public void setDose2(String dose2) {
@@ -381,7 +402,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDose3() {
-        return dose3;
+        return dose3.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose3);
     }
 
     public void setDose3(String dose3) {
@@ -389,7 +410,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDose4() {
-        return dose4;
+        return dose4.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose4);
     }
 
     public void setDose4(String dose4) {
@@ -397,7 +418,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDose5() {
-        return dose5;
+        return dose5.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose5);
     }
 
     public void setDose5(String dose5) {
@@ -418,5 +439,9 @@ public class ClinicalTrialRecord {
 
     public void setExternalLinks(List<ClinicalTrialExternalLink> externalLinks) {
         this.externalLinks = externalLinks;
+    }
+
+    public String formatFieldVal(String fieldVal){
+        return  Arrays.stream(fieldVal.split(",")).map(str->StringUtils.capitalize(str.toLowerCase().trim().replaceAll("_", " "))).collect(Collectors.joining(", "));
     }
 }
