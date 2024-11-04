@@ -144,7 +144,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getEligibilitySex() {
-        return eligibilitySex;
+        return formatFieldVal(eligibilitySex);
     }
 
     public void setEligibilitySex(String eligibilitySex) {
