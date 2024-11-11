@@ -98,14 +98,12 @@ public class ClinicalTrialRecord {
     }
 
     public String getSponsorClass() {
-        if(!sponsorClass.equals("")&&!sponsorClass.equalsIgnoreCase("NIH")){
-            return formatFieldVal(sponsorClass);
-        }
         return sponsorClass;
     }
 
     public void setSponsorClass(String sponsorClass) {
-        this.sponsorClass = sponsorClass;
+        if(sponsorClass!=null)
+        this.sponsorClass = formatFieldVal(sponsorClass);
     }
 
     public String getIndication() {
@@ -144,11 +142,13 @@ public class ClinicalTrialRecord {
     }
 
     public String getEligibilitySex() {
-        return formatFieldVal(eligibilitySex);
+
+        return eligibilitySex;
     }
 
     public void setEligibilitySex(String eligibilitySex) {
-        this.eligibilitySex = eligibilitySex;
+        if(eligibilitySex!=null)
+        this.eligibilitySex = formatFieldVal(eligibilitySex);
     }
 
     public String getElibilityMinAge() {
@@ -172,11 +172,12 @@ public class ClinicalTrialRecord {
 
 
     public String getIsFDARegulated() {
-        return isFDARegulated!=null&&!isFDARegulated.equalsIgnoreCase("null")?StringUtils.capitalize(isFDARegulated):"";
+        return isFDARegulated;
     }
 
     public void setIsFDARegulated(String isFDARegulated) {
-        this.isFDARegulated = isFDARegulated;
+        if(isFDARegulated!=null && !isFDARegulated.equalsIgnoreCase("null"))
+        this.isFDARegulated = StringUtils.capitalize(isFDARegulated);
     }
 
     public String getBriefTitle() {
@@ -212,36 +213,30 @@ public class ClinicalTrialRecord {
     }
 
     public String getPhase() {
-        if(!phase.equals("")){
-            return formatFieldVal(phase);
-        }
         return phase;
     }
 
     public void setPhase(String phase) {
-        this.phase = phase;
+        if(phase!=null)
+        this.phase =  formatFieldVal(phase);
     }
 
     public String getStandardAge() {
-        if(!standardAge.equals("")){
-            return formatFieldVal(standardAge);
-        }
         return standardAge;
     }
 
     public void setStandardAge(String standardAge) {
-        this.standardAge = standardAge;
+        if(standardAge!=null)
+        this.standardAge =formatFieldVal(standardAge);
     }
 
     public String getStudyStatus() {
-        if(!studyStatus.equals("")){
-            return formatFieldVal(studyStatus);
-        }
         return studyStatus;
     }
 
     public void setStudyStatus(String studyStatus) {
-        this.studyStatus = studyStatus;
+        if(studyStatus!=null)
+        this.studyStatus = formatFieldVal(studyStatus);
     }
 
     public String getFirstSubmitDate() {
@@ -370,11 +365,12 @@ public class ClinicalTrialRecord {
     }
 
     public String getRecentUpdates() {
-        return recentUpdates!=null&&!recentUpdates.equalsIgnoreCase("null")?StringUtils.capitalize(recentUpdates):"";
+        return recentUpdates;
     }
 
     public void setRecentUpdates(String recentUpdates) {
-        this.recentUpdates = recentUpdates;
+        if(recentUpdates!=null)
+        this.recentUpdates = StringUtils.capitalize(recentUpdates);
     }
 
     public String getCompoundName() {
@@ -386,43 +382,48 @@ public class ClinicalTrialRecord {
     }
 
     public String getDose1() {
-        return dose1.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose1);
+        return dose1;
     }
 
     public void setDose1(String dose1) {
-        this.dose1 = dose1;
+        if(dose1!=null && !dose1.equalsIgnoreCase("none"))
+            this.dose1 = StringUtils.capitalize(dose1);
     }
 
     public String getDose2() {
-        return dose2.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose2);
+        return dose2;
     }
 
     public void setDose2(String dose2) {
-        this.dose2 = dose2;
+        if(dose2!=null && !dose2.equalsIgnoreCase("none"))
+            this.dose2 = StringUtils.capitalize(dose2);
     }
 
     public String getDose3() {
-        return dose3.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose3);
+        return dose3;
     }
 
     public void setDose3(String dose3) {
-        this.dose3 = dose3;
+        if(dose3!=null && !dose3.equalsIgnoreCase("none"))
+        this.dose3 = StringUtils.capitalize(dose3);
     }
 
     public String getDose4() {
-        return dose4.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose4);
+        return dose4;
     }
 
     public void setDose4(String dose4) {
-        this.dose4 = dose4;
+        if(dose4!=null && !dose4.equalsIgnoreCase("none"))
+            this.dose4 = StringUtils.capitalize(dose4);
     }
 
     public String getDose5() {
-        return dose5.equalsIgnoreCase("none")?"":StringUtils.capitalize(dose5);
+        return dose5;
     }
 
     public void setDose5(String dose5) {
-        this.dose5 = dose5;
+        if(dose5!=null && !dose5.equalsIgnoreCase("none"))
+            this.dose5 = StringUtils.capitalize(dose5);
     }
 
     public String getPatents() {
