@@ -102,8 +102,7 @@ public class ClinicalTrialRecord {
     }
 
     public void setSponsorClass(String sponsorClass) {
-        if(sponsorClass!=null)
-        this.sponsorClass = formatFieldVal(sponsorClass);
+        this.sponsorClass = sponsorClass;
     }
 
     public String getIndication() {
@@ -114,7 +113,13 @@ public class ClinicalTrialRecord {
         this.indication = indication;
     }
 
+    public String getPhase() {
+        return phase;
+    }
 
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
 
     public int getEnrorllmentCount() {
         return enrorllmentCount;
@@ -123,7 +128,6 @@ public class ClinicalTrialRecord {
     public void setEnrorllmentCount(int enrorllmentCount) {
         this.enrorllmentCount = enrorllmentCount;
     }
-
 
     public String getLocation() {
         return location;
@@ -142,13 +146,11 @@ public class ClinicalTrialRecord {
     }
 
     public String getEligibilitySex() {
-
         return eligibilitySex;
     }
 
     public void setEligibilitySex(String eligibilitySex) {
-        if(eligibilitySex!=null)
-        this.eligibilitySex = formatFieldVal(eligibilitySex);
+        this.eligibilitySex = eligibilitySex;
     }
 
     public String getElibilityMinAge() {
@@ -159,7 +161,13 @@ public class ClinicalTrialRecord {
         this.elibilityMinAge = elibilityMinAge;
     }
 
+    public String getElibilityMaxAge() {
+        return elibilityMaxAge;
+    }
 
+    public void setElibilityMaxAge(String elibilityMaxAge) {
+        this.elibilityMaxAge = elibilityMaxAge;
+    }
 
     public String getHealthyVolunteers() {
         return healthyVolunteers;
@@ -169,15 +177,20 @@ public class ClinicalTrialRecord {
         this.healthyVolunteers = healthyVolunteers;
     }
 
+    public String getStandardAge() {
+        return standardAge;
+    }
 
+    public void setStandardAge(String standardAge) {
+        this.standardAge = standardAge;
+    }
 
     public String getIsFDARegulated() {
         return isFDARegulated;
     }
 
     public void setIsFDARegulated(String isFDARegulated) {
-        if(isFDARegulated!=null && !isFDARegulated.equalsIgnoreCase("null"))
-        this.isFDARegulated = StringUtils.capitalize(isFDARegulated);
+        this.isFDARegulated = isFDARegulated;
     }
 
     public String getBriefTitle() {
@@ -204,39 +217,12 @@ public class ClinicalTrialRecord {
         this.nihReportLink = nihReportLink;
     }
 
-    public String getElibilityMaxAge() {
-        return elibilityMaxAge;
-    }
-
-    public void setElibilityMaxAge(String elibilityMaxAge) {
-        this.elibilityMaxAge = elibilityMaxAge;
-    }
-
-    public String getPhase() {
-        return phase;
-    }
-
-    public void setPhase(String phase) {
-        if(phase!=null)
-        this.phase =  formatFieldVal(phase);
-    }
-
-    public String getStandardAge() {
-        return standardAge;
-    }
-
-    public void setStandardAge(String standardAge) {
-        if(standardAge!=null)
-        this.standardAge =formatFieldVal(standardAge);
-    }
-
     public String getStudyStatus() {
         return studyStatus;
     }
 
     public void setStudyStatus(String studyStatus) {
-        if(studyStatus!=null)
-        this.studyStatus = formatFieldVal(studyStatus);
+        this.studyStatus = studyStatus;
     }
 
     public String getFirstSubmitDate() {
@@ -280,7 +266,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTargetGeneOrVariant() {
-        return StringUtils.capitalize(targetGeneOrVariant);
+        return targetGeneOrVariant;
     }
 
     public void setTargetGeneOrVariant(String targetGeneOrVariant) {
@@ -288,7 +274,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTherapyType() {
-        return StringUtils.capitalize(therapyType);
+        return therapyType;
     }
 
     public void setTherapyType(String therapyType) {
@@ -296,7 +282,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTherapyRoute() {
-        return StringUtils.capitalize(therapyRoute);
+        return therapyRoute;
     }
 
     public void setTherapyRoute(String therapyRoute) {
@@ -304,8 +290,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getMechanismOfAction() {
-
-        return StringUtils.capitalize(mechanismOfAction);
+        return mechanismOfAction;
     }
 
     public void setMechanismOfAction(String mechanismOfAction) {
@@ -313,8 +298,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getRouteOfAdministration() {
-
-        return StringUtils.capitalize(routeOfAdministration);
+        return routeOfAdministration;
     }
 
     public void setRouteOfAdministration(String routeOfAdministration) {
@@ -322,8 +306,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDrugProductType() {
-
-        return StringUtils.capitalize(drugProductType);
+        return drugProductType;
     }
 
     public void setDrugProductType(String drugProductType) {
@@ -331,8 +314,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getTargetTissueOrCell() {
-
-        return StringUtils.capitalize(targetTissueOrCell);
+        return targetTissueOrCell;
     }
 
     public void setTargetTissueOrCell(String targetTissueOrCell) {
@@ -340,8 +322,7 @@ public class ClinicalTrialRecord {
     }
 
     public String getDeliverySystem() {
-
-        return StringUtils.capitalize(deliverySystem);
+        return deliverySystem;
     }
 
     public void setDeliverySystem(String deliverySystem) {
@@ -369,12 +350,11 @@ public class ClinicalTrialRecord {
     }
 
     public void setRecentUpdates(String recentUpdates) {
-        if(recentUpdates!=null)
-        this.recentUpdates = StringUtils.capitalize(recentUpdates);
+        this.recentUpdates = recentUpdates;
     }
 
     public String getCompoundName() {
-        return StringUtils.capitalize(compoundName);
+        return compoundName;
     }
 
     public void setCompoundName(String compoundName) {
@@ -386,8 +366,7 @@ public class ClinicalTrialRecord {
     }
 
     public void setDose1(String dose1) {
-        if(dose1!=null && !dose1.equalsIgnoreCase("none"))
-            this.dose1 = StringUtils.capitalize(dose1);
+        this.dose1 = dose1;
     }
 
     public String getDose2() {
@@ -395,8 +374,7 @@ public class ClinicalTrialRecord {
     }
 
     public void setDose2(String dose2) {
-        if(dose2!=null && !dose2.equalsIgnoreCase("none"))
-            this.dose2 = StringUtils.capitalize(dose2);
+        this.dose2 = dose2;
     }
 
     public String getDose3() {
@@ -404,8 +382,7 @@ public class ClinicalTrialRecord {
     }
 
     public void setDose3(String dose3) {
-        if(dose3!=null && !dose3.equalsIgnoreCase("none"))
-        this.dose3 = StringUtils.capitalize(dose3);
+        this.dose3 = dose3;
     }
 
     public String getDose4() {
@@ -413,8 +390,7 @@ public class ClinicalTrialRecord {
     }
 
     public void setDose4(String dose4) {
-        if(dose4!=null && !dose4.equalsIgnoreCase("none"))
-            this.dose4 = StringUtils.capitalize(dose4);
+        this.dose4 = dose4;
     }
 
     public String getDose5() {
@@ -422,16 +398,7 @@ public class ClinicalTrialRecord {
     }
 
     public void setDose5(String dose5) {
-        if(dose5!=null && !dose5.equalsIgnoreCase("none"))
-            this.dose5 = StringUtils.capitalize(dose5);
-    }
-
-    public String getPatents() {
-        return patents;
-    }
-
-    public void setPatents(String patents) {
-        this.patents = patents;
+        this.dose5 = dose5;
     }
 
     public List<ClinicalTrialExternalLink> getExternalLinks() {
@@ -442,7 +409,11 @@ public class ClinicalTrialRecord {
         this.externalLinks = externalLinks;
     }
 
-    public String formatFieldVal(String fieldVal){
-        return  Arrays.stream(fieldVal.split(",")).map(str->StringUtils.capitalize(str.toLowerCase().trim().replaceAll("_", " "))).collect(Collectors.joining(", "));
+    public String getPatents() {
+        return patents;
+    }
+
+    public void setPatents(String patents) {
+        this.patents = patents;
     }
 }

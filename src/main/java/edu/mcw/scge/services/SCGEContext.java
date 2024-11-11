@@ -40,17 +40,18 @@ public class SCGEContext {
     }
 
     public static String getESIndexName() {
+        String categoryName="ct"; // ct -> clinical trial
+        String indexName="scgeplatform_search"+"_"+categoryName;
+
         try {
-            if( isProduction() ) {
-                return"scgeplatform_search_prod";
+            if( isProduction() || isTest()) {
+                System.out.println("Environment: PROD OR STAGE" );
+                return indexName+"_stage";
+            }else {
+                System.out.println("Environment: DEV" );
+                return indexName + "_dev";
             }
 
-            if( isDev() ) {
-                return "scge_platform_ctapi_search_dev";
-            }
-            if( isTest() ) {
-                return "scge_platform_search_ct_stage";
-            }else   return "scge_platform_search_ct_stage";
 
         } catch( UnknownHostException e ) {
             return null;
