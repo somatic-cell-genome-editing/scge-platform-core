@@ -26,13 +26,13 @@ public class PersonInfoQuery extends MappingSqlQuery {
         //obj.setSubGroupId(rs.getInt("subgroup_id"));
         //obj.setSubGroupName(rs.getString("subgroup_name"));
         try {
-            obj.setGrantId(rs.getInt("grant_id"));
+            obj.setGrantId(rs.getInt("project_id"));
         }catch (Exception e){ }
         try {
-            if (rs.getString("grant_title") != null);
+            if (rs.getString("project_title") != null);
         }catch (Exception e){}
         try {
-            obj.setGrantTitle(rs.getString("grant_title"));
+            obj.setGrantTitle(rs.getString("project_title"));
         }catch (Exception e){}
         try {
             if (rs.getString("grant_initiative") != null)

@@ -15,23 +15,23 @@ import java.util.List;
 public class GroupDAO extends AbstractDAO {
 
     public void insert(SCGEGroup g) throws Exception{
-        String sql="insert into scge_group(group_id, group_name, group_short_name,group_type, group_name_lc) values(?,?,?,?,?)";
+        String sql="insert into groups(group_id, group_name, group_short_name,group_type, group_name_lc) values(?,?,?,?,?)";
         update(sql,
               g.getGroupId(), g.getGroupName(), g.getGroupShortName(),g.getGroupType(),g.getGroupNameLC());
 
     }
     public void updateGroupName(int groupId, String groupName) throws Exception{
-        String sql="update scge_group set group_name=? where group_id=?" ;
+        String sql="update groups set group_name=? where group_id=?" ;
         update(sql, groupName, groupId);
 
     }
     public List<SCGEGroup> getAllGroups() throws Exception {
-        String sql="select * from scge_group order by group_name";
+        String sql="select * from groups order by group_name";
         GroupQuery q=new GroupQuery(this.getDataSource(), sql);
         return q.execute();
     }
     public int getGroupId(String groupName) throws Exception {
-        String sql="select group_id from scge_group where group_name_lc=?";
+        String sql="select group_id from groups where group_name_lc=?";
         IntListQuery q=new IntListQuery(this.getDataSource(), sql);
         List<Integer> group=execute(q, groupName);
         return group != null && group.size() > 0 ? group.get(0) : 0;
@@ -54,16 +54,16 @@ public class GroupDAO extends AbstractDAO {
     }
 
     public List<SCGEGroup> getSubGroupsByGroupId(int groupId) throws Exception {
-        String sql="select * from scge_group where group_id in (" +
+        String sql="select * from groups where group_id in (" +
                 "select subgroup_id from group_associations where group_id in (" +
-                "select group_id from scge_group where group_id=?))";
+                "select group_id from groups where group_id=?))";
         GroupQuery query= new GroupQuery(this.getDataSource(), sql);
         return execute(query, groupId);
     }
 
 
 public List<Person> getGroupMembers(String groupName) throws Exception {
-    String sql="select p.* from person p , person_info pi, scge_group g " +
+    String sql="select p.* from person p , person_info pi, groups g " +
             "where p.person_id=pi.person_id " +
             "and p.status='ACTIVE' " +
             "and g.group_id=pi.group_id " +
@@ -72,7 +72,7 @@ public List<Person> getGroupMembers(String groupName) throws Exception {
     return execute(q, groupName);
 }
     public List<Person> getGroupMembersByGroupId(int groupId) throws Exception {
-        String sql="select p.* from person p , person_info pi, scge_group g " +
+        String sql="select p.* from person p , person_info pi, groups g " +
                 "where p.person_id=pi.person_id " +
                 "AND p.status= 'ACTIVE' " +
                 "and g.group_id=pi.group_id " +
@@ -81,7 +81,7 @@ public List<Person> getGroupMembers(String groupName) throws Exception {
         return execute(q, groupId);
     }
     public SCGEGroup getGroupById(int groupId) throws Exception{
-        String sql="select * from scge_group where group_id=?";
+        String sql="select * from groups where group_id=?";
         GroupQuery q=new GroupQuery(getDataSource(), sql);
         List<SCGEGroup> groups=execute(q, groupId);
         if(groups!=null){
@@ -92,14 +92,14 @@ public List<Person> getGroupMembers(String groupName) throws Exception {
     public List<Integer> getDCCNIHGroupIds() throws Exception {
         String sql = "select subgroup_id from group_associations where group_id in (" +
 
-                "select group_id from scge_group where group_name='DCC' or group_name='NIH')";
+                "select group_id from groups where group_name='DCC' or group_name='NIH')";
         IntListQuery q= new IntListQuery(this.getDataSource(), sql);
 
         return q.execute();
     }
 
     public List<Integer> getDCCNIHAncestorGroupIds() throws Exception {
-        String sql="select group_id from scge_group where group_name in (?,?)" ;
+        String sql="select group_id from groups where group_name in (?,?)" ;
         IntListQuery q= new IntListQuery(this.getDataSource(), sql);
         return execute(q, "DCC", "NIH");
     }

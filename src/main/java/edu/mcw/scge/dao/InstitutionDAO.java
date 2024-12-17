@@ -22,14 +22,14 @@ public class InstitutionDAO extends AbstractDAO {
 
     public String getRoleByKey(int roleKey) throws Exception {
 
-        String sql="select role from scge_roles where role_key=?";
+        String sql="select role from roles where role_key=?";
         StringListQuery q=new StringListQuery(this.getDataSource(), sql);
         List<String> roles=execute(q, roleKey);
         return (roles!=null && roles.size()>0) ?roles.get(0):"";
     }
     public int getRoleKeyOfRole(String role) throws Exception {
 
-        String sql="select role_key from scge_roles where role=?";
+        String sql="select role_key from roles where role=?";
         IntListQuery q=new IntListQuery(this.getDataSource(), sql);
         List<Integer> roleKeys=execute(q, role);
         return (roleKeys!=null && roleKeys.size()>0) ?roleKeys.get(0):0;

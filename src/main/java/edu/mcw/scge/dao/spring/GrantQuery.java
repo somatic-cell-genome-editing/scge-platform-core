@@ -16,10 +16,10 @@ public class GrantQuery extends MappingSqlQuery {
     @Override
     protected Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         Grant g= new Grant();
-        g.setGrantId(rs.getInt("grant_id"));
+        g.setGrantId(rs.getInt("project_id"));
         g.setGroupId(rs.getInt("group_id"));
-        g.setGrantTitle(rs.getString("grant_title"));
-        g.setGrantTitleLc(rs.getString("grant_title_lc"));
+        g.setGrantTitle(rs.getString("project_title"));
+        g.setGrantTitleLc(rs.getString("project_title_lc"));
         g.setGrantInitiative(rs.getString("grant_initiative"));
         g.setDescription(rs.getString("description"));
         try {

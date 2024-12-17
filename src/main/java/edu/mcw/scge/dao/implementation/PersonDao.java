@@ -25,7 +25,7 @@ public class PersonDao extends AbstractDAO {
             String sql="select * from person p , person_info pi where " +
                     " p.person_id=pi.person_id and" +
                     " p.email_lc=?" +
-                    " and role_key in (select role_key from scge_roles where role=?)";
+                    " and role_key in (select role_key from roles where role=?)";
             PersonQuery personQuery=new PersonQuery(this.getDataSource(), sql);
             List<Person> personList=personQuery.execute(sql, person.getEmail_lc(), "admin");
             return personList.size() > 0;
@@ -35,7 +35,7 @@ public class PersonDao extends AbstractDAO {
         String sql="select * from person p , person_info pi where " +
                 " p.person_id=pi.person_id and" +
                 " p.email_lc=?" +
-                " and role_key in (select role_key from scge_roles where role=?)";
+                " and role_key in (select role_key from roles where role=?)";
         PersonQuery personQuery=new PersonQuery(this.getDataSource(), sql);
         List<Person> personList=personQuery.execute(sql, person.getEmail_lc(), "developer");
         return personList.size() > 0;
@@ -125,7 +125,7 @@ public class PersonDao extends AbstractDAO {
     }
 
     public List<String> getPersonGroups(Person p) throws Exception {
-        String sql="select g.group_name from scge_group g, person_info r, person p " +
+        String sql="select g.group_name from groups g, person_info r, person p " +
                 "where g.group_id=r.group_id " +
                 "and r.person_id=p.person_id " +
                 "and p.status='ACTIVE' " +
@@ -134,7 +134,7 @@ public class PersonDao extends AbstractDAO {
         return execute(q,p.getId());
     }
     public List<String> getGroups(Person p) throws Exception {
-        String sql="select g.group_name from scge_group g , person_info pg where " +
+        String sql="select g.group_name from groups g , person_info pg where " +
                 "g.group_id=pg.group_id and person_id=?";
         StringListQuery q=new StringListQuery(this.getDataSource(), sql);
         return execute(q, p.getId());
@@ -164,7 +164,7 @@ public class PersonDao extends AbstractDAO {
     }
 
     public List<String> getRolesByPersonId(int personId, String groupName) throws Exception {
-        String sql="select r.role from scge_roles r, person p, person_info pi, scge_group g where " +
+        String sql="select r.role from roles r, person p, person_info pi, groups g where " +
                 "r.role_key=pi.role_key " +
                 "and p.person_id=pi.person_id " +
                 "and g.group_id=pi.group_id " +
@@ -203,11 +203,11 @@ public class PersonDao extends AbstractDAO {
         return id;
     }
 
-    public void insertGrant(int grant_id, String grantTitle, int groupId) throws Exception {
+    public void insertGrant(int project_id, String grantTitle, int groupId) throws Exception {
 
-        String sql="insert into scge_grants values(?,?,?,?)";
+        String sql="insert into projects values(?,?,?,?)";
         try {
-            update(sql, grant_id, grantTitle, grantTitle.toLowerCase(),groupId);
+            update(sql, project_id, grantTitle, grantTitle.toLowerCase(),groupId);
         }catch (Exception e){
             System.err.println("Grant TITLE:"+grantTitle);
         }
@@ -215,7 +215,7 @@ public class PersonDao extends AbstractDAO {
     }
 
     public int getGroupId(String groupName, String groupType) throws Exception {
-        String sql = "select group_id from scge_group where group_name_lc=? and group_type=?";
+        String sql = "select group_id from groups where group_name_lc=? and group_type=?";
         IntListQuery query = new IntListQuery(this.getDataSource(), sql);
         List<Integer> ids = execute(query, groupName.toLowerCase().trim(), groupType);
         int id = 0;
@@ -237,7 +237,7 @@ public class PersonDao extends AbstractDAO {
     }
     public List<Integer> getRolesIds(List<String> roles) throws Exception {
 
-        String sql="select role_key from scge_roles where role in (";
+        String sql="select role_key from roles where role in (";
         boolean first=true;
         for(String role: roles){
         if(first){
@@ -277,7 +277,7 @@ public class PersonDao extends AbstractDAO {
     }
     public int getRoleId(String role) throws Exception {
         int roleKey=0;
-        String sql="select role_key from scge_roles where role=?";
+        String sql="select role_key from roles where role=?";
         IntListQuery query=new IntListQuery(this.getDataSource(), sql);
         List<Integer> roles=execute(query, role);
         if(roles!=null && roles.size()>0){
@@ -289,11 +289,11 @@ public class PersonDao extends AbstractDAO {
         return roleKey;
     }
     public void insertRole(String role, int roleKey) throws Exception {
-        String sql="insert into scge_roles (role_key, role) values (?,?)";
+        String sql="insert into roles (role_key, role) values (?,?)";
         update(sql, roleKey, role);
     }
     public String getRole(String role) throws Exception {
-        String sql="select role from scge_roles where role=?";
+        String sql="select role from roles where role=?";
         StringListQuery query=new StringListQuery(this.getDataSource(), sql);
         List<String> roles=execute(query, role);
         if(roles!=null && roles.size()>0){
@@ -303,7 +303,7 @@ public class PersonDao extends AbstractDAO {
         }
     }
     public int getDefaultGroupId(String defaultGroupName) throws Exception {
-        String sql="select group_id from scge_group where group_name=?";
+        String sql="select group_id from groups where group_name=?";
         IntListQuery query=new IntListQuery(this.getDataSource(), sql);
         List<Integer> ids=execute(query, defaultGroupName);
         int id=0;
@@ -445,8 +445,8 @@ public class PersonDao extends AbstractDAO {
         }
     }
     public List<PersonInfo> getPersonInfo(int personId) throws Exception {
-            String sql = "select p.person_id, g.group_name,g.group_id, g.group_type, r.role , grnt.grant_title, grnt.grant_initiative,grnt.grant_id " +
-            "from scge_group g , person_info i, person p, scge_roles r, scge_grants grnt where p.person_id=i.person_id " +
+            String sql = "select p.person_id, g.group_name,g.group_id, g.group_type, r.role , grnt.project_title, grnt.grant_initiative,grnt.project_id " +
+            "from groups g , person_info i, person p, roles r, projects grnt where p.person_id=i.person_id " +
             "and g.group_id=i.group_id and r.role_key=i.role_key and p.status='ACTIVE' and p.person_id =? and grnt.group_id=g.group_id ";
 
 
