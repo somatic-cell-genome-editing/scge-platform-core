@@ -162,6 +162,10 @@ public class ClinicalTrailDAO extends AbstractDAO {
         String sql = "Update clinical_trial_ext_links set link_name=?,link_type=?,link=?,nctid=? where id=?";
         this.update(sql,link.getName(),link.getType(),link.getLink(),link.getNctId(),link.getId());
     }
+    public void deleteExternalLink(int linkId) throws Exception{
+        String sql = "Delete from clinical_trial_ext_links where id=?";
+        this.update(sql,linkId);
+    }
     public boolean existsExternalLink(ClinicalTrialExternalLink link) throws Exception {
         String sql="select * from clinical_trial_ext_links where link_name=? and link_type=? and nctid=?";
         ClinicalTrialExternalLinksQuery query=new ClinicalTrialExternalLinksQuery(this.getDataSource(), sql);
