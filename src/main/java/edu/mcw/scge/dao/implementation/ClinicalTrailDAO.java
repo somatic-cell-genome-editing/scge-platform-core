@@ -196,6 +196,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return execute(query, nctId);
     }
 
+    public List<ClinicalTrialExternalLink> getExtLinksByNctIdSorted(String nctId) throws Exception {
+        String sql="select * from clinical_trial_ext_links where nctid=? order by link_type";
+        ClinicalTrialExternalLinksQuery query=new ClinicalTrialExternalLinksQuery(this.getDataSource(), sql);
+        return execute(query, nctId);
+    }
+
     public String getResponseStr(String fetchUri){
         RestTemplate restTemplate=new RestTemplate();
         return restTemplate.getForObject(fetchUri, String.class);
