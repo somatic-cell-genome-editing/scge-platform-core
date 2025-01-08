@@ -60,4 +60,9 @@ public class ApplicationDAO extends AbstractDAO {
         ApplicationQuery query=new ApplicationQuery(this.getDataSource(), sql);
         return query.execute();
     }
+    public List<Application> getApplicationsByGroupId(int groupId) throws Exception {
+        String sql="select * from application where group_id=?";
+        ApplicationQuery query=new ApplicationQuery(this.getDataSource(), sql);
+        return execute(query, groupId);
+    }
 }
