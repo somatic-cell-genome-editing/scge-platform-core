@@ -11,36 +11,36 @@ import java.util.List;
 
 public class GrantDao extends AbstractDAO {
     public void insert(Grant g) throws Exception {
-        String sql="insert into scge_grants (grant_id, group_id, grant_title, grant_title_lc, grant_initiative) values(?,?,?,?,?)";
+        String sql="insert into projects (project_id, group_id, project_title, project_title_lc, grant_initiative) values(?,?,?,?,?)";
         update(sql,g.getGrantId(), g.getGroupId(), g.getGrantNumber(), g.getGrantTitle(), g.getGrantTitleLc(), g.getGrantInitiative());
     }
     public Grant getGrantByTitle(String grantTitle) throws Exception {
-        String sql="select * from scge_grants where grant_title_lc=?" ;
+        String sql="select * from projects where project_title_lc=?" ;
         GrantQuery q=new GrantQuery(this.getDataSource(), sql);
         List<Grant> grantList=execute(q, grantTitle);
         return (grantList!=null && grantList.size()>0)?grantList.get(0):null;
     }
 
     public Grant getGrantByGroupId(int groupId) throws Exception {
-        String sql="select * from scge_grants where group_id=?" ;
+        String sql="select * from projects where group_id=?" ;
         GrantQuery q=new GrantQuery(this.getDataSource(), sql);
         List<Grant> grantList=execute(q, groupId);
         return (grantList!=null && grantList.size()>0)?grantList.get(0):null;
     }
     public String getCurrentGrantNumberByGrantId(int grantId) throws Exception {
-        String sql="select grant_number from grant_numbers where grant_id=? and status=?" ;
+        String sql="select grant_number from grant_numbers where project_id=? and status=?" ;
        StringListQuery q=new StringListQuery(this.getDataSource(), sql);
         List<String> grantList=execute(q, grantId, "current");
         return (grantList!=null && grantList.size()>0)?grantList.get(0):"";
     }
     public List<String> getFormerGrantNumbersByGrantId(int grantId) throws Exception {
-        String sql="select grant_number from grant_numbers where grant_id=? and status=?" ;
+        String sql="select grant_number from grant_numbers where project_id=? and status=?" ;
         StringListQuery q=new StringListQuery(this.getDataSource(), sql);
         return execute(q, grantId, "former");
 
     }
     public String getCurrentNihReportLink(int grantId) throws Exception {
-        String sql="select nih_reporter_link from grant_numbers where grant_id=? and status=?" ;
+        String sql="select nih_reporter_link from grant_numbers where project_id=? and status=?" ;
         StringListQuery q=new StringListQuery(this.getDataSource(), sql);
         List<String> links=execute(q, grantId, "current");
         return links.size()>0?links.get(0):"";
@@ -70,12 +70,12 @@ public class GrantDao extends AbstractDAO {
 
     }
     public List<String> getAllDistinctInitiatives() throws Exception {
-        String sql="select distinct(grant_initiative) from scge_grants where project_type='grant'";
+        String sql="select distinct(grant_initiative) from projects where project_type='grant'";
         StringListQuery q= new StringListQuery(this.getDataSource(), sql);
         return q.execute();
     }
     public List<Grant> getGrantsByInitiative(String initiative) throws Exception {
-        String sql="select * from scge_grants where grant_initiative=?";
+        String sql="select * from projects where grant_initiative=?";
         GrantQuery q=new GrantQuery(this.getDataSource(), sql);
         return execute(q, initiative);
     }
