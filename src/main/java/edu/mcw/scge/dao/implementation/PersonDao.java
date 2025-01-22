@@ -504,7 +504,6 @@ public class PersonDao extends AbstractDAO {
             Map<String, String> nameMap=personDao.getFirstAndLastName(personFullName);
             String firstName=nameMap.get("firstName");
             String lastName=nameMap.get("lastName");
-            System.out.println("FULLNAME:"+ personFullName+"\tFIRST:"+ nameMap.get("firstName") +"\tLAST:"+ nameMap.get("lastName"));
             person.setFirstName(firstName);
             person.setLastName(lastName);
             personDao.update(person);

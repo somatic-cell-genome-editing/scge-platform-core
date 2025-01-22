@@ -45,10 +45,8 @@ public class SCGEContext {
 
         try {
             if( isProduction() || isTest()) {
-                System.out.println("Environment: PROD OR STAGE" );
                 return indexName+"_stage";
             }else {
-                System.out.println("Environment: DEV" );
                 return indexName + "_dev";
             }
 
