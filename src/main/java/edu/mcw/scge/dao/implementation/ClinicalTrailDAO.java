@@ -211,7 +211,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return records.size() > 0;
     }
 
-    public void downloadClinicalTrailByNctId(String nctId) {
+    public String downloadClinicalTrailByNctId(String nctId) {
         String baseURI = "https://clinicaltrials.gov/api/v2/studies/";
         ObjectMapper mapper = new ObjectMapper();
         String fetchUri = baseURI + nctId;
@@ -283,13 +283,19 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.setLastUpdatePostDate(study.getProtocolSection().getStatusModule().getLastUpdatePostDateStruct().getDate());
                 if (!this.existsRecord(record.getNctId())) {
                     this.insert(record);
+                    return "inserted";
+
                 } else {
                     this.updateAPIDataFields(record);
+                    return "updated";
                 }
             }
-        } catch (Exception var17) {
+            return "error_no_response";
+        }
+        catch (Exception var17) {
             System.out.println("NCTID:" + nctId);
             var17.printStackTrace();
+            return "error_" + var17.getClass().getSimpleName();
         }
 
     }
