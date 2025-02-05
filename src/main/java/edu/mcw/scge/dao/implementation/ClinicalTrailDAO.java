@@ -64,7 +64,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "recent_updates, " +
                 "patents, " +
                 "compound_name, " +
-                "indication) " +
+                "indication," +
+                "record_creation_date, record_modified_date) " +
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
                 "?," +
                 "?," +
@@ -84,7 +85,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "?," +
                 "?," +
                 "?," +
-                "?" +
+                "?," +
+                "NOW(), NOW()" +
                 ")";
         update(sql,record.getNctId(),
                 record.getDescription(),
@@ -133,11 +135,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
     }
 
     public void updateCuratedDataFields(ClinicalTrialRecord record) throws Exception {
-        String sql = "update clinical_trial_record set target_gene=?,therapy_type=?,therapy_route=?,mechanism_of_action=?,route_of_administration=?,drug_product_type=?,target_tissue=?,delivery_system=?,vector_type=?,editor_type=?,dose_1=?,dose_2=?,dose_3=?,dose_4=?,dose_5=?,recent_updates=?, patents=?, compound_name=?, indication=?, last_modified_date=NOW() where nctid=? ";
+        String sql = "update clinical_trial_record set target_gene=?,therapy_type=?,therapy_route=?,mechanism_of_action=?,route_of_administration=?,drug_product_type=?,target_tissue=?,delivery_system=?,vector_type=?,editor_type=?,dose_1=?,dose_2=?,dose_3=?,dose_4=?,dose_5=?,recent_updates=?, patents=?, compound_name=?, indication=?, record_modified_date=NOW() where nctid=? ";
         this.update(sql, record.getTargetGeneOrVariant(), record.getTherapyType(), record.getTherapyRoute(), record.getMechanismOfAction(), record.getRouteOfAdministration(), record.getDrugProductType(), record.getTargetTissueOrCell(), record.getDeliverySystem(), record.getVectorType(), record.getEditorType(), record.getDose1(), record.getDose2(), record.getDose3(), record.getDose4(), record.getDose5(), record.getRecentUpdates(), record.getPatents(), record.getCompoundName(), record.getIndication(),record.getnCTNumber().trim());
     }
     public void updateAPIDataFields(ClinicalTrialRecord record) throws Exception {
-        String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,indication=?,phases=?,enrollment_count=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=?, last_modified_date=NOW() where nctid=?";
+        String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,indication=?,phases=?,enrollment_count=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=?, record_modified_date=NOW() where nctid=?";
         this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(), record.getIndication(), record.getPhase(), record.getEnrorllmentCount(), record.getLocation(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAge(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStudyStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(),record.getNctId().trim());
     }
 
@@ -222,7 +224,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 JSONObject jsonObject = new JSONObject(responseStr);
                 Study study = (Study)mapper.readValue(jsonObject.toString(), Study.class);
                 ClinicalTrialRecord record = new ClinicalTrialRecord();
-                record.setNctId(nctId);
+                record.setNctId(nctId.trim());
                 record.setDescription(study.getProtocolSection().getDescriptionModule().getBriefSummary());
                 StringBuilder interventions = new StringBuilder();
                 StringBuilder interventionDescription = new StringBuilder();
