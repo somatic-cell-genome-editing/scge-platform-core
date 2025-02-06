@@ -28,7 +28,7 @@ public class PersonDao extends AbstractDAO {
                     " and role_key in (select role_key from roles where role=?)";
             PersonQuery personQuery=new PersonQuery(this.getDataSource(), sql);
             List<Person> personList=execute(personQuery,person.getEmail_lc(),"admin");
-            return personList.size() > 0;
+            return personList!=null && personList.size() > 0;
 
         }
     public boolean isDeveloper(Person person) throws Exception {
@@ -38,7 +38,7 @@ public class PersonDao extends AbstractDAO {
                 " and role_key in (select role_key from roles where role=?)";
         PersonQuery personQuery=new PersonQuery(this.getDataSource(), sql);
         List<Person> personList=execute(personQuery, person.getEmail_lc(), "developer");
-        return personList.size() > 0;
+        return personList!=null && personList.size() > 0;
     }
     public void insert(Person p) throws Exception {
 
