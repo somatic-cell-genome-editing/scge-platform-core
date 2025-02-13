@@ -81,7 +81,7 @@ public class ESClient {
         return client;
     }
     public static synchronized void destroy() throws IOException {
-        System.out.println("destroying Variants Elasticsearch Client...");
+        System.out.println("destroying Elasticsearch Client...");
         if(client!=null) {
             client.close();
             //   client.threadPool().shutdownNow();
