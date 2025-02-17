@@ -44,7 +44,7 @@ public class SCGEContext {
         String indexName="scgeplatform_search"+"_"+categoryName;
 
         try {
-            if( isProduction() || isTest()) {
+            if( isTest()) {
                 return indexName+"_stage";
             }if( isProduction() ){
                 return indexName+"_prod";
