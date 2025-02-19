@@ -260,7 +260,20 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.setElibilityMaxAge(study.getProtocolSection().getEligibilityModule().getMaximumAge());
                 record.setHealthyVolunteers(study.getProtocolSection().getEligibilityModule().getHealthyVolunteers().toString());
                 record.setStandardAge(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
-                record.setIsFDARegulated(String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug()));
+                String isFDARegulatedDrug=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug());
+                String isFDARegulatedDevice=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice());
+                String containsUSLocation=null;
+                if(record.getLocation()!=null && record.getLocation().toLowerCase().contains("united states")){
+                    containsUSLocation="true";
+                }
+                String isFDARegulated=null;
+                if(isFDARegulatedDrug.equalsIgnoreCase("true") || isFDARegulatedDevice.equalsIgnoreCase("true") || containsUSLocation.equalsIgnoreCase("true")){
+                    isFDARegulated="true";
+                }else{
+                    if(isFDARegulatedDrug.equalsIgnoreCase("false") || isFDARegulatedDevice.equalsIgnoreCase("false") || containsUSLocation.equalsIgnoreCase("false"))
+                    isFDARegulated="false";
+                }
+                record.setIsFDARegulated(isFDARegulated);
                 record.setBriefTitle(study.getProtocolSection().getIdentificationModule().getBriefTitle());
                 record.setOfficialTitle(study.getProtocolSection().getIdentificationModule().getOfficialTitle());
                 if (study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos") != null) {
