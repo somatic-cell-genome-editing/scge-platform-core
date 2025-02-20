@@ -260,17 +260,21 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.setElibilityMaxAge(study.getProtocolSection().getEligibilityModule().getMaximumAge());
                 record.setHealthyVolunteers(study.getProtocolSection().getEligibilityModule().getHealthyVolunteers().toString());
                 record.setStandardAge(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
-                String isFDARegulatedDrug=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug());
-                String isFDARegulatedDevice=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice());
+                String isFDARegulatedDrug="";
+                String isFDARegulatedDevice="";
+                if(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug()!=null)
+                     isFDARegulatedDrug+=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug());
+                if(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice()!=null)
+                    isFDARegulatedDevice+=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice());
                 String containsUSLocation=null;
                 if(record.getLocation()!=null && record.getLocation().toLowerCase().contains("united states")){
                     containsUSLocation="true";
                 }
                 String isFDARegulated=null;
-                if(isFDARegulatedDrug.equalsIgnoreCase("true") || isFDARegulatedDevice.equalsIgnoreCase("true") || containsUSLocation.equalsIgnoreCase("true")){
+                if(isFDARegulatedDrug.equalsIgnoreCase("true") || isFDARegulatedDevice.equalsIgnoreCase("true") || (containsUSLocation!=null)){
                     isFDARegulated="true";
                 }else{
-                    if(isFDARegulatedDrug.equalsIgnoreCase("false") || isFDARegulatedDevice.equalsIgnoreCase("false") || containsUSLocation.equalsIgnoreCase("false"))
+                    if(isFDARegulatedDrug.equalsIgnoreCase("false") || isFDARegulatedDevice.equalsIgnoreCase("false"))
                     isFDARegulated="false";
                 }
                 record.setIsFDARegulated(isFDARegulated);
