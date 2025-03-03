@@ -62,6 +62,9 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
             record.setRecentUpdates(rs.getString("recent_updates"));
         record.setPatents(rs.getString("patents"));
         record.setCompoundName(rs.getString("compound_name"));
+        record.setDevelopmentStatus(rs.getString("development_status"));
+        record.setFdaDesignation(rs.getString("fda_designation"));
+        record.setIndicationDOID(rs.getString("indication_doid"));
             return formatRecordValue(record);
     }
     public ClinicalTrialRecord formatRecordValue(ClinicalTrialRecord record){
