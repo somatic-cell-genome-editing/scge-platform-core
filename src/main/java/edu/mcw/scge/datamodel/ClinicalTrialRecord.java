@@ -56,6 +56,33 @@ public class ClinicalTrialRecord {
     private List<ClinicalTrialExternalLink> externalLinks;
 
     private String patents;
+    private String developmentStatus;
+      private String      fdaDesignation;
+    private String indicationDOID;
+
+    public String getDevelopmentStatus() {
+        return developmentStatus;
+    }
+
+    public void setDevelopmentStatus(String developmentStatus) {
+        this.developmentStatus = developmentStatus;
+    }
+
+    public String getFdaDesignation() {
+        return fdaDesignation;
+    }
+
+    public void setFdaDesignation(String fdaDesignation) {
+        this.fdaDesignation = fdaDesignation;
+    }
+
+    public String getIndicationDOID() {
+        return indicationDOID;
+    }
+
+    public void setIndicationDOID(String indicationDOID) {
+        this.indicationDOID = indicationDOID;
+    }
 
     public String getNctId() {
         return nctId;
