@@ -59,6 +59,15 @@ public class ClinicalTrialRecord {
     private String developmentStatus;
       private String      fdaDesignation;
     private String indicationDOID;
+    private String compoundDescription;
+
+    public String getCompoundDescription() {
+        return compoundDescription;
+    }
+
+    public void setCompoundDescription(String compoundDescription) {
+        this.compoundDescription = compoundDescription;
+    }
 
     public String getDevelopmentStatus() {
         return developmentStatus;
