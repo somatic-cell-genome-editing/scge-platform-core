@@ -57,7 +57,7 @@ public class ClinicalTrialRecord {
 
     private String patents;
     private String developmentStatus;
-      private String      fdaDesignation;
+      private String      FDADesignation;
     private String indicationDOID;
     private String compoundDescription;
 
@@ -77,12 +77,12 @@ public class ClinicalTrialRecord {
         this.developmentStatus = developmentStatus;
     }
 
-    public String getFdaDesignation() {
-        return fdaDesignation;
+    public String getFDADesignation() {
+        return FDADesignation;
     }
 
-    public void setFdaDesignation(String fdaDesignation) {
-        this.fdaDesignation = fdaDesignation;
+    public void setFDADesignation(String FDADesignation) {
+        this.FDADesignation = FDADesignation;
     }
 
     public String getIndicationDOID() {
