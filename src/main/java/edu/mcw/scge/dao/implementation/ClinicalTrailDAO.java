@@ -146,7 +146,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "fda_designation=?," +
                 "indication_doid=?, compound_name=?, compound_description=?, record_modified_date=NOW() where nctid=? ";
         this.update(sql, record.getDevelopmentStatus(),
-                record.getFDADesignation(),
+                record.getFdaDesignation(),
                 record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
     }
     public void updateAPIDataFields(ClinicalTrialRecord record) throws Exception {
