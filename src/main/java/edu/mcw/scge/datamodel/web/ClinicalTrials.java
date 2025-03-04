@@ -6,7 +6,7 @@ import java.util.List;
 public class ClinicalTrials {
     public static List<String> facets;
     static {
-        facets= Arrays.asList("indication","FDADesignation","status", "developmentStatus", "phases","standardAges"
+        facets= Arrays.asList("indication","fdaDesignation","status", "developmentStatus", "phases","standardAges"
                 , "therapyType", "therapyRoute", "drugProductType",
                 "deliverySystem","sponsorClass","sponsor","vectorType","editorType",
                 "targetGeneOrVariant",  "targetTissueOrCell", "routeOfAdministration","mechanismOfAction","locations"
