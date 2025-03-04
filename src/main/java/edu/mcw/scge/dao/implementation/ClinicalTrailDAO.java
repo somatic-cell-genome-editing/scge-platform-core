@@ -350,11 +350,28 @@ public class ClinicalTrailDAO extends AbstractDAO {
         update(sql, alias.getIdentifier(), alias.getNotes(), alias.getAliasTypeLC(), alias.getAlias(), alias.getFieldName());
     }
 
-    public List<Alias> getAliases(String identifier, String aliasType) throws Exception {
-        String sql="select * from alias where identifier=? and aliasTypeLc=?";
-        AliasQuery query=new AliasQuery(this.getDataSource(), sql);
-        return execute(query, identifier, aliasType.toLowerCase());
+    public void updateAlias(Alias alias) throws Exception {
+        String sql = "update alias set " +
+                "identifier=?, " +
+                "notes=?, " +
+                "alias_type_lc=?, " +
+                "alias=?, " +
+                "field_name=?, " +
+                "where key=?";
+
+        update(sql,
+                alias.getIdentifier(),
+                alias.getNotes(),
+                alias.getAliasTypeLC(),
+                alias.getAlias(),
+                alias.getFieldName(),
+                alias.getKey());
     }
 
+    public List<Alias> getAliases(String identifier, String fieldName) throws Exception {
+        String sql="select * from alias where identifier=? and field_name=?";
+        AliasQuery query=new AliasQuery(this.getDataSource(), sql);
+        return execute(query, identifier, fieldName.toLowerCase());
+    }
 
 }
