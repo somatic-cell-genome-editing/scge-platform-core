@@ -45,7 +45,7 @@ public class SCGEContext {
 
         try {
             if( isTest()) {
-                return indexName+"_stage";
+                return indexName+"_test";
             }if( isProduction() ){
                 return indexName+"_prod";
             } else {
