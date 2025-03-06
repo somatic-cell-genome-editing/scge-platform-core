@@ -68,8 +68,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "indication_doid, compound_description) " +
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
-                "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "NOW()," +
-                " NOW(), " + "?, ?, ?,?" +
+                "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
+                "NOW()," + "NOW()," + "?, ?, ?" +  // Removed the extra ? here
                 ")";
         update(sql,record.getNctId(),
                 record.getDescription(),
@@ -117,8 +117,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getFdaDesignation(),
                 record.getIndicationDOID(),
                 record.getCompoundDescription()
-                );
-
+        );
     }
 
     public void updateCuratedDataFields(ClinicalTrialRecord record) throws Exception {
