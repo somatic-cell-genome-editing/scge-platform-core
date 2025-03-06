@@ -63,13 +63,16 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "patents, " +
                 "compound_name, " +
                 "indication," +
-                "record_creation_date, record_modified_date,development_status, " +
+                "record_creation_date, record_modified_date, " +
+                "development_status, " +
                 "fda_designation," +
-                "indication_doid, compound_description) " +
+                "indication_doid, " +
+                "compound_description) " +
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
-                "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "NOW()," +
-                " NOW(), " + "?, ?, ?,?" +
+                "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
+                "NOW()," + "NOW()," +
+                "?," + "?," + "?," + "?" +
                 ")";
         update(sql,record.getNctId(),
                 record.getDescription(),
@@ -117,8 +120,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getFdaDesignation(),
                 record.getIndicationDOID(),
                 record.getCompoundDescription()
-                );
-
+        );
     }
 
     public void updateCuratedDataFields(ClinicalTrialRecord record) throws Exception {
