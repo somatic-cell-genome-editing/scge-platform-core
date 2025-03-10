@@ -3,9 +3,11 @@ package edu.mcw.scge.dao.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mcw.scge.dao.AbstractDAO;
 import edu.mcw.scge.dao.spring.AliasQuery;
+import edu.mcw.scge.dao.spring.ClinicalTrialAdditionalInfoQuery;
 import edu.mcw.scge.dao.spring.ClinicalTrialExternalLinksQuery;
 import edu.mcw.scge.dao.spring.ClinicalTrialQuery;
 import edu.mcw.scge.datamodel.Alias;
+import edu.mcw.scge.datamodel.ClinicalTrialAdditionalInfo;
 import edu.mcw.scge.datamodel.ClinicalTrialExternalLink;
 import edu.mcw.scge.datamodel.ClinicalTrialRecord;
 
@@ -64,12 +66,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "compound_name, " +
                 "indication," +
                 "record_creation_date, record_modified_date,development_status, " +
-                "fda_designation," +
                 "indication_doid, compound_description) " +
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "NOW()," +
-                " NOW(), " + "?, ?, ?,?" +
+                " NOW(), " + "?, ?,?" +
                 ")";
         update(sql,record.getNctId(),
                 record.getDescription(),
@@ -114,7 +115,6 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getCompoundName(),
                 record.getIndication(),
                 record.getDevelopmentStatus(),
-                record.getFdaDesignation(),
                 record.getIndicationDOID(),
                 record.getCompoundDescription()
                 );
@@ -128,10 +128,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public void updateSomeNewFieldsDataFields(ClinicalTrialRecord record) throws Exception {
         String sql = "update clinical_trial_record " +
                 "set development_status=?," +
-                "fda_designation=?," +
                 "indication_doid=?, compound_name=?, compound_description=?, record_modified_date=NOW() where nctid=? ";
         this.update(sql, record.getDevelopmentStatus(),
-                record.getFdaDesignation(),
                 record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
     }
     public void updateAPIDataFields(ClinicalTrialRecord record) throws Exception {
@@ -169,6 +167,18 @@ public class ClinicalTrailDAO extends AbstractDAO {
         ClinicalTrialExternalLinksQuery query=new ClinicalTrialExternalLinksQuery(this.getDataSource(), sql);
         List<ClinicalTrialExternalLink> links=execute(query, link.getName(), link.getType(), link.getNctId());
         return links.size()>0;
+    }
+    public boolean existsAlias(Alias alias) throws Exception {
+        String sql="select * from alias where identifier=? and alias=? ";
+        AliasQuery query=new AliasQuery(this.getDataSource(), sql);
+        List<Alias> aliases=execute(query, alias.getIdentifier(), alias.getAlias());
+        return aliases.size()>0;
+    }
+    public boolean existsInfo(ClinicalTrialAdditionalInfo info) throws Exception {
+        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=? and property_value=? ";
+        ClinicalTrialAdditionalInfoQuery query=new ClinicalTrialAdditionalInfoQuery(this.getDataSource(), sql);
+        List<ClinicalTrialAdditionalInfo> additionalInfos=execute(query, info.getNctId(), info.getPropertyName(), info.getPropertyValue());
+        return additionalInfos.size()>0;
     }
     public List<ClinicalTrialRecord> getAllClinicalTrailRecords() throws Exception {
         String sql="select * from clinical_trial_record ";
@@ -335,6 +345,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
         update(sql, alias.getIdentifier(), alias.getNotes(), alias.getAliasTypeLC(), alias.getAlias(), alias.getFieldName());
     }
 
+
     public void updateAlias(Alias alias) throws Exception {
         String sql = "update alias set " +
                 "identifier=?, " +
@@ -357,6 +368,16 @@ public class ClinicalTrailDAO extends AbstractDAO {
         String sql="select * from alias where identifier=? and field_name=?";
         AliasQuery query=new AliasQuery(this.getDataSource(), sql);
         return execute(query, identifier, fieldName.toLowerCase());
+    }
+    public void insertAdditionalInfo(ClinicalTrialAdditionalInfo info) throws Exception {
+        String sql="insert into clinical_trial_additional_info(nct_id, property_name,property_value)" +
+                "   values(?,?,?)";
+        update(sql, info.getNctId(),info.getPropertyName(),info.getPropertyValue());
+    }
+    public List<ClinicalTrialAdditionalInfo> getAdditionalInfo(String nctId, String propertyName) throws Exception {
+        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=?";
+        ClinicalTrialAdditionalInfoQuery query=new ClinicalTrialAdditionalInfoQuery(this.getDataSource(), sql);
+        return execute(query, nctId, propertyName.toLowerCase());
     }
 
 }
