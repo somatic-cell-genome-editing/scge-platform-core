@@ -2,10 +2,7 @@ package edu.mcw.scge.dao.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mcw.scge.dao.AbstractDAO;
-import edu.mcw.scge.dao.spring.AliasQuery;
-import edu.mcw.scge.dao.spring.ClinicalTrialAdditionalInfoQuery;
-import edu.mcw.scge.dao.spring.ClinicalTrialExternalLinksQuery;
-import edu.mcw.scge.dao.spring.ClinicalTrialQuery;
+import edu.mcw.scge.dao.spring.*;
 import edu.mcw.scge.datamodel.Alias;
 import edu.mcw.scge.datamodel.ClinicalTrialAdditionalInfo;
 import edu.mcw.scge.datamodel.ClinicalTrialExternalLink;
@@ -380,6 +377,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
         String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=?";
         ClinicalTrialAdditionalInfoQuery query=new ClinicalTrialAdditionalInfoQuery(this.getDataSource(), sql);
         return execute(query, nctId, propertyName.toLowerCase());
+    }
+
+    public List<String> getDistinctPropertyValues(String propertyName) throws Exception{
+        String sql = "select distinct property_value from clinical_trial_additional_info where property_name=? order by property_value";
+        return StringListQuery.execute(this,sql,propertyName);
     }
 
 }
