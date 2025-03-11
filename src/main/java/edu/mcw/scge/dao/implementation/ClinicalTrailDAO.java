@@ -374,7 +374,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
         update(sql, info.getNctId(),info.getPropertyName(),info.getPropertyValue());
     }
     public List<ClinicalTrialAdditionalInfo> getAdditionalInfo(String nctId, String propertyName) throws Exception {
-        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=?";
+        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=? order by property_value";
         ClinicalTrialAdditionalInfoQuery query=new ClinicalTrialAdditionalInfoQuery(this.getDataSource(), sql);
         return execute(query, nctId, propertyName.toLowerCase());
     }
@@ -382,6 +382,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public List<String> getDistinctPropertyValues(String propertyName) throws Exception{
         String sql = "select distinct property_value from clinical_trial_additional_info where property_name=? order by property_value";
         return StringListQuery.execute(this,sql,propertyName);
+    }
+
+    public void deleteAdditionalInfo(String nctId, String propertyName, String propertyValue) throws Exception{
+        String sql = "delete from clinical_trial_additional_info where nct_id=? and property_name=? and property_value=?";
+        update(sql, nctId, propertyName, propertyValue);
     }
 
 }
