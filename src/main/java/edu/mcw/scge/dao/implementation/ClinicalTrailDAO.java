@@ -351,7 +351,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "notes=?, " +
                 "alias_type_lc=?, " +
                 "alias=?, " +
-                "field_name=?, " +
+                "field_name=? " +
                 "where key=?";
 
         update(sql,
