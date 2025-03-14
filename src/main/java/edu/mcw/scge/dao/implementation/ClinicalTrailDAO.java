@@ -368,6 +368,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
         AliasQuery query=new AliasQuery(this.getDataSource(), sql);
         return execute(query, identifier, fieldName.toLowerCase());
     }
+
+    public void deleteAlias(int key) throws Exception{
+        String sql = "Delete from alias where key=?";
+        update(sql,key);
+    }
     public void insertAdditionalInfo(ClinicalTrialAdditionalInfo info) throws Exception {
         String sql="insert into clinical_trial_additional_info(nct_id, property_name,property_value)" +
                 "   values(?,?,?)";
