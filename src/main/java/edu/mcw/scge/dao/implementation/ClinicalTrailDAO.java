@@ -351,7 +351,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "notes=?, " +
                 "alias_type_lc=?, " +
                 "alias=?, " +
-                "field_name=?, " +
+                "field_name=? " +
                 "where key=?";
 
         update(sql,
@@ -368,13 +368,18 @@ public class ClinicalTrailDAO extends AbstractDAO {
         AliasQuery query=new AliasQuery(this.getDataSource(), sql);
         return execute(query, identifier, fieldName.toLowerCase());
     }
+
+    public void deleteAlias(int key) throws Exception{
+        String sql = "Delete from alias where key=?";
+        update(sql,key);
+    }
     public void insertAdditionalInfo(ClinicalTrialAdditionalInfo info) throws Exception {
         String sql="insert into clinical_trial_additional_info(nct_id, property_name,property_value)" +
                 "   values(?,?,?)";
         update(sql, info.getNctId(),info.getPropertyName(),info.getPropertyValue());
     }
     public List<ClinicalTrialAdditionalInfo> getAdditionalInfo(String nctId, String propertyName) throws Exception {
-        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=?";
+        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=? order by property_value";
         ClinicalTrialAdditionalInfoQuery query=new ClinicalTrialAdditionalInfoQuery(this.getDataSource(), sql);
         return execute(query, nctId, propertyName.toLowerCase());
     }
@@ -382,6 +387,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public List<String> getDistinctPropertyValues(String propertyName) throws Exception{
         String sql = "select distinct property_value from clinical_trial_additional_info where property_name=? order by property_value";
         return StringListQuery.execute(this,sql,propertyName);
+    }
+
+    public void deleteAdditionalInfo(String nctId, String propertyName, String propertyValue) throws Exception{
+        String sql = "delete from clinical_trial_additional_info where nct_id=? and property_name=? and property_value=?";
+        update(sql, nctId, propertyName, propertyValue);
     }
 
 }
