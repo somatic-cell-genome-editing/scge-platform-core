@@ -9,7 +9,7 @@ public class ClinicalTrials {
         facets= Arrays.asList("indication","fdaDesignations","status", "developmentStatus", "phases","standardAges"
                 , "therapyType", "therapyRoute", "drugProductType",
                 "deliverySystem","sponsorClass","sponsor","vectorType","editorType",
-                "targetGeneOrVariant",  "targetTissueOrCell", "routeOfAdministration","mechanismOfAction","locations"
+                "targetGeneOrVariant",  "targetTissueOrCell", "routeOfAdministration","mechanismOfAction","locations","eligibilitySex"
         );
     }
 

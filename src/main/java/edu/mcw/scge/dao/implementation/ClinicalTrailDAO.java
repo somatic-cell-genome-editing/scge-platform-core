@@ -235,12 +235,16 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 StringBuilder interventions = new StringBuilder();
                 StringBuilder interventionDescription = new StringBuilder();
                 Iterator var11 = study.getProtocolSection().getArmsInterventionsModule().getInterventions().iterator();
-
+                boolean first=true;
                 while(var11.hasNext()) {
                     Intervention intervention = (Intervention)var11.next();
                     Map<String, Object> otherProps = intervention.getAdditionalProperties();
                     interventions.append(intervention.getName());
-                    interventions.append(", ");
+                    if(first) {
+                        first=false;
+                    }else {
+                        interventions.append(", ");
+                    }
                     interventionDescription.append(otherProps.get("description"));
                 }
 
