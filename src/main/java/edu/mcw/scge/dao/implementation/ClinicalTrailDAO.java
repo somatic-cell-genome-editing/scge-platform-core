@@ -230,7 +230,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
 
             if(!differences.isEmpty()) {
                 logger.info("UPDATES: "+record.getNctId()+"\t>>>\t"+differences);
-                 //updateAPIDataFields(record);
+                 updateAPIDataFields(record);
                 return differences;
             }
 
@@ -333,7 +333,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                     return "inserted";
 
                 } else {
-                   String differences= this.updateAPIFields(record);
+                    this.updateAPIFields(record);
                     return "updated";
 
                 }
