@@ -11,7 +11,10 @@ import edu.mcw.scge.datamodel.ClinicalTrialRecord;
 import edu.mcw.scge.datamodel.clinicalTrialModel.Intervention;
 import edu.mcw.scge.datamodel.clinicalTrialModel.Location;
 import edu.mcw.scge.datamodel.clinicalTrialModel.Study;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+
 import org.springframework.web.client.RestTemplate;
 
 
@@ -19,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClinicalTrailDAO extends AbstractDAO {
+    public Logger logger= LogManager.getLogger("clinicalTrials");
     public void insert(ClinicalTrialRecord record) throws Exception {
         String sql="insert into clinical_trial_record (nctid, " +
                 "description," +
@@ -218,7 +222,21 @@ public class ClinicalTrailDAO extends AbstractDAO {
         List<ClinicalTrialRecord> records= getClinicalTrailRecordByNctId(nctId);
         return records.size() > 0;
     }
+    public String updateAPIFields(ClinicalTrialRecord record) throws Exception {
+        List<ClinicalTrialRecord> records= getClinicalTrailRecordByNctId(record.getNctId());
+        if(records.size()>0) {
+            ClinicalTrialRecord existingRecord = records.get(0);
+            String differences= existingRecord.compareAPIFields(record);
 
+            if(!differences.isEmpty()) {
+                logger.info("UPDATES: "+record.getNctId()+"\t>>>\t"+differences);
+                 //updateAPIDataFields(record);
+                return differences;
+            }
+
+        }
+       return "";
+    }
     public String downloadClinicalTrailByNctId(String nctId) {
         String baseURI = "https://clinicaltrials.gov/api/v2/studies/";
         ObjectMapper mapper = new ObjectMapper();
@@ -315,14 +333,15 @@ public class ClinicalTrailDAO extends AbstractDAO {
                     return "inserted";
 
                 } else {
-                    this.updateAPIDataFields(record);
+                   String differences= this.updateAPIFields(record);
                     return "updated";
+
                 }
             }
             return "error_no_response";
         }
         catch (Exception var17) {
-            System.out.println("NCTID:" + nctId);
+            logger.error("NCTID:" + nctId);
             var17.printStackTrace();
             return "error_" + var17.getClass().getSimpleName();
         }
