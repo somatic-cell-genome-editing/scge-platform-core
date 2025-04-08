@@ -60,6 +60,16 @@ public class ClinicalTrialRecord {
     private String indicationDOID;
     private String compoundDescription;
 
+    private String withHasResults;
+
+    public String getWithHasResults() {
+        return withHasResults;
+    }
+
+    public void setWithHasResults(String withHasResults) {
+        this.withHasResults = withHasResults;
+    }
+
     public String getCompoundDescription() {
         return compoundDescription;
     }
@@ -543,6 +553,11 @@ public class ClinicalTrialRecord {
         if (!this.  nCTNumber.equals(other.  nCTNumber)) {
             differences.append("  nCTNumber differs: ").append(this.nCTNumber).append(" vs ").append(other.nCTNumber).append("\n");
         }
+        }catch (Exception ignored){}
+        try{
+            if (!(String.valueOf(this.withHasResults)).equals(String.valueOf(other. withHasResults))) {
+                differences.append("  isWithHasResults differs: ").append(this.withHasResults).append(" vs ").append(other.withHasResults).append("\n");
+            }
         }catch (Exception ignored){}
         return differences.toString();
     }
