@@ -481,11 +481,13 @@ public class ClinicalTrialRecord {
         if (!this.sponsorClass.equals(other.sponsorClass)) {
             differences.append("sponsorClass differs: ").append(this.sponsorClass).append(" vs ").append(other.sponsorClass).append("\n");
         }
-        }catch (Exception ignored){}try{
-        if (!this. indication.equals(other. indication)) {
-            differences.append(" indication differs: ").append(this.indication).append(" vs ").append(other.indication).append("\n");
-        }
-        }catch (Exception ignored){}try{
+        }catch (Exception ignored){}
+//        try{
+//        if (!this. indication.equals(other. indication)) {
+//            differences.append(" indication differs: ").append(this.indication).append(" vs ").append(other.indication).append("\n");
+//        }
+//        }catch (Exception ignored){}
+        try{
         if (!this.   phase.equals(other.   phase)) {
             differences.append("   phase differs: ").append(this.phase).append(" vs ").append(other.phase).append("\n");
         }
