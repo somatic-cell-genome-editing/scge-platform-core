@@ -630,6 +630,7 @@ public class ClinicalTrialRecord {
         if(!record.getSponsorClass().equals("") && !record.getSponsorClass().equalsIgnoreCase("NIH")) record.setSponsorClass(formatFieldVal(record.getSponsorClass()));
         if(!record.getPhase().equals("")) record.setPhase(formatFieldVal(record.getPhase()));
         if(!record.getStandardAge().equals("")) record.setStandardAge(formatFieldVal(record.getStandardAge()));
+        if(!record.getWithHasResults().equals("")) record.setWithHasResults(formatFieldVal(record.getWithHasResults()));
         return record;
     }
 
