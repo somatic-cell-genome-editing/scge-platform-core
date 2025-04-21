@@ -293,9 +293,9 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.setStandardAge(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
                 String isFDARegulatedDrug="";
                 String isFDARegulatedDevice="";
-                if(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug()!=null)
+                if(study.getProtocolSection().getOversightModule()!=null && study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug()!=null)
                      isFDARegulatedDrug+=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug());
-                if(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice()!=null)
+                if(study.getProtocolSection().getOversightModule()!=null && study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice()!=null)
                     isFDARegulatedDevice+=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice());
                 String containsUSLocation=null;
                 if(record.getLocation()!=null && record.getLocation().toLowerCase().contains("united states")){
@@ -309,24 +309,25 @@ public class ClinicalTrailDAO extends AbstractDAO {
                     isFDARegulated="false";
                 }
                 record.setIsFDARegulated(isFDARegulated);
-                record.setBriefTitle(study.getProtocolSection().getIdentificationModule().getBriefTitle());
-                record.setOfficialTitle(study.getProtocolSection().getIdentificationModule().getOfficialTitle());
-                if (study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos") != null) {
-                    ArrayList object = (ArrayList)study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos");
-                    StringBuilder builder = new StringBuilder();
-                    Iterator var14 = object.iterator();
+                if(study.getProtocolSection().getIdentificationModule()!=null) {
+                    record.setBriefTitle(study.getProtocolSection().getIdentificationModule().getBriefTitle());
+                    record.setOfficialTitle(study.getProtocolSection().getIdentificationModule().getOfficialTitle());
+                    if (study.getProtocolSection().getIdentificationModule().getAdditionalProperties()!=null && study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos") != null) {
+                        ArrayList object = (ArrayList) study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos");
+                        StringBuilder builder = new StringBuilder();
+                        Iterator var14 = object.iterator();
 
-                    while(var14.hasNext()) {
-                        Object o = var14.next();
-                        String link = (String)((Map)o).get("link");
-                        if (link != null) {
-                            builder.append(link).append(";");
+                        while (var14.hasNext()) {
+                            Object o = var14.next();
+                            String link = (String) ((Map) o).get("link");
+                            if (link != null) {
+                                builder.append(link).append(";");
+                            }
                         }
+
+                        record.setNihReportLink(builder.toString());
                     }
-
-                    record.setNihReportLink(builder.toString());
                 }
-
                 record.setStudyStatus(study.getProtocolSection().getStatusModule().getOverallStatus());
                 record.setFirstSubmitDate(study.getProtocolSection().getStatusModule().getStudyFirstSubmitDate());
                 record.setEstimatedCompleteDate(study.getProtocolSection().getStatusModule().getCompletionDateStruct().getDate());
