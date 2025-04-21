@@ -70,6 +70,7 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
             record.setWithHasResults(rs.getString("with_has_results"));
             else  record.setWithHasResults("");
         }catch (Exception exception){}
+        record.setRecordStatus(rs.getString("record_status"));
             return record.formatRecordValue(record);
     }
 //    public ClinicalTrialRecord formatRecordValue(ClinicalTrialRecord record){

@@ -61,7 +61,7 @@ public class ClinicalTrialRecord {
     private String compoundDescription;
 
     private String withHasResults;
-
+    private String recordStatus;
     public String getWithHasResults() {
         return withHasResults;
     }
@@ -454,6 +454,15 @@ public class ClinicalTrialRecord {
     public void setPatents(String patents) {
         this.patents = patents;
     }
+
+    public String getRecordStatus() {
+        return recordStatus;
+    }
+
+    public void setRecordStatus(String recordStatus) {
+        this.recordStatus = recordStatus;
+    }
+
     public String compareAPIFields(ClinicalTrialRecord otherRecord) {
         StringBuilder differences = new StringBuilder();
         ClinicalTrialRecord other=formatRecordValue(otherRecord);
