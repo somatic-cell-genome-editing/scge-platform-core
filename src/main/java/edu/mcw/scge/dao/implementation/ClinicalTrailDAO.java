@@ -251,88 +251,142 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 Study study = (Study)mapper.readValue(jsonObject.toString(), Study.class);
                 ClinicalTrialRecord record = new ClinicalTrialRecord();
                 record.setNctId(nctId.trim());
-                record.setDescription(study.getProtocolSection().getDescriptionModule().getBriefSummary());
+                try {
+                    record.setDescription(study.getProtocolSection().getDescriptionModule().getBriefSummary());
+                }catch (Exception ignored){}
                 StringBuilder interventions = new StringBuilder();
                 StringBuilder interventionDescription = new StringBuilder();
-                Iterator var11 = study.getProtocolSection().getArmsInterventionsModule().getInterventions().iterator();
-                boolean first=true;
-                while(var11.hasNext()) {
-                    Intervention intervention = (Intervention)var11.next();
-                    Map<String, Object> otherProps = intervention.getAdditionalProperties();
+                try {
+                    Iterator var11 = study.getProtocolSection().getArmsInterventionsModule().getInterventions().iterator();
+                    boolean first = true;
+                    while (var11.hasNext()) {
+                        Intervention intervention = (Intervention) var11.next();
+                        Map<String, Object> otherProps = intervention.getAdditionalProperties();
 
-                    if(first) {
-                        first=false;
-                    }else {
-                        interventions.append(", ");
+                        if (first) {
+                            first = false;
+                        } else {
+                            interventions.append(", ");
+                        }
+                        interventions.append(intervention.getName());
+                        interventionDescription.append(otherProps.get("description"));
                     }
-                    interventions.append(intervention.getName());
-                    interventionDescription.append(otherProps.get("description"));
-                }
-
+                }catch (Exception ignored){}
                 record.setInterventionName(interventions.toString());
                 record.setInterventionDescription(interventionDescription.toString());
-                record.setSponsor(study.getProtocolSection().getSponsorCollaboratorsModule().getLeadSponsor().getName());
-                record.setSponsorClass(study.getProtocolSection().getSponsorCollaboratorsModule().getLeadSponsor().getClass_());
-                record.setIndication(String.join(", ", study.getProtocolSection().getConditionsModule().getConditions()));
-                ArrayList<String> conditionKeywords = (ArrayList)study.getProtocolSection().getConditionsModule().getAdditionalProperties().get("keywords");
-                if (conditionKeywords != null && !conditionKeywords.isEmpty()) {
-                    record.setBrowseConditionTerms((String)conditionKeywords.stream().collect(Collectors.joining(", ")));
-                }
-
-                record.setPhase(String.join(", ", study.getProtocolSection().getDesignModule().getPhases()));
-                record.setEnrorllmentCount(study.getProtocolSection().getDesignModule().getEnrollmentInfo().getCount());
-                if (study.getProtocolSection().getContactsLocationsModule() != null) {
-                    record.setLocation(String.join(",", (Iterable)study.getProtocolSection().getContactsLocationsModule().getLocations().stream().map(Location::getCountry).collect(Collectors.toSet())));
-                    record.setNumberOfLocations(study.getProtocolSection().getContactsLocationsModule().getLocations().size());
-                }
-
-                record.setEligibilitySex(study.getProtocolSection().getEligibilityModule().getSex());
-                record.setElibilityMinAge(study.getProtocolSection().getEligibilityModule().getMinimumAge());
-                record.setElibilityMaxAge(study.getProtocolSection().getEligibilityModule().getMaximumAge());
-                record.setHealthyVolunteers(study.getProtocolSection().getEligibilityModule().getHealthyVolunteers().toString());
-                record.setStandardAge(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
+                try {
+                    record.setSponsor(study.getProtocolSection().getSponsorCollaboratorsModule().getLeadSponsor().getName());
+                }catch (Exception ignored){}
+                try {
+                    record.setSponsorClass(study.getProtocolSection().getSponsorCollaboratorsModule().getLeadSponsor().getClass_());
+                }catch (Exception ignored){}
+                try {
+                    record.setIndication(String.join(", ", study.getProtocolSection().getConditionsModule().getConditions()));
+                }catch (Exception ignored){}
+                try {
+                    ArrayList<String> conditionKeywords = (ArrayList) study.getProtocolSection().getConditionsModule().getAdditionalProperties().get("keywords");
+                    if (conditionKeywords != null && !conditionKeywords.isEmpty()) {
+                        record.setBrowseConditionTerms((String) conditionKeywords.stream().collect(Collectors.joining(", ")));
+                    }
+                }catch (Exception ignored){}
+                try {
+                    record.setPhase(String.join(", ", study.getProtocolSection().getDesignModule().getPhases()));
+                }catch (Exception ignored){}
+                try {
+                    record.setEnrorllmentCount(study.getProtocolSection().getDesignModule().getEnrollmentInfo().getCount());
+                }catch (Exception ignored){}
+                try {
+                    if (study.getProtocolSection().getContactsLocationsModule() != null) {
+                        record.setLocation(String.join(",", (Iterable) study.getProtocolSection().getContactsLocationsModule().getLocations().stream().map(Location::getCountry).collect(Collectors.toSet())));
+                        record.setNumberOfLocations(study.getProtocolSection().getContactsLocationsModule().getLocations().size());
+                    }
+                }catch (Exception ignored){}
+                try {
+                    record.setEligibilitySex(study.getProtocolSection().getEligibilityModule().getSex());
+                }catch (Exception ignored){}
+                try {
+                    record.setElibilityMinAge(study.getProtocolSection().getEligibilityModule().getMinimumAge());
+                }catch (Exception ignored){}
+                try {
+                    record.setElibilityMaxAge(study.getProtocolSection().getEligibilityModule().getMaximumAge());
+                }catch (Exception ignored){}
+                try {
+                    record.setHealthyVolunteers(study.getProtocolSection().getEligibilityModule().getHealthyVolunteers().toString());
+                }catch (Exception ignored){}
+                try {
+                    record.setStandardAge(String.join(",", study.getProtocolSection().getEligibilityModule().getStdAges()));
+                }catch (Exception ignored){}
                 String isFDARegulatedDrug="";
                 String isFDARegulatedDevice="";
-                if(study.getProtocolSection().getOversightModule()!=null && study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug()!=null)
-                     isFDARegulatedDrug+=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug());
-                if(study.getProtocolSection().getOversightModule()!=null && study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice()!=null)
-                    isFDARegulatedDevice+=String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice());
-                String containsUSLocation=null;
-                if(record.getLocation()!=null && record.getLocation().toLowerCase().contains("united states")){
-                    containsUSLocation="true";
-                }
-                String isFDARegulated=null;
-                if(isFDARegulatedDrug.equalsIgnoreCase("true") || isFDARegulatedDevice.equalsIgnoreCase("true") || (containsUSLocation!=null)){
-                    isFDARegulated="true";
-                }else{
-                    if(isFDARegulatedDrug.equalsIgnoreCase("false") || isFDARegulatedDevice.equalsIgnoreCase("false"))
-                    isFDARegulated="false";
-                }
-                record.setIsFDARegulated(isFDARegulated);
-                if(study.getProtocolSection().getIdentificationModule()!=null) {
-                    record.setBriefTitle(study.getProtocolSection().getIdentificationModule().getBriefTitle());
-                    record.setOfficialTitle(study.getProtocolSection().getIdentificationModule().getOfficialTitle());
-                    if (study.getProtocolSection().getIdentificationModule().getAdditionalProperties()!=null && study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos") != null) {
-                        ArrayList object = (ArrayList) study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos");
-                        StringBuilder builder = new StringBuilder();
-                        Iterator var14 = object.iterator();
+                try {
+                    if (study.getProtocolSection().getOversightModule() != null && study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug() != null)
+                        isFDARegulatedDrug += String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDrug());
+                }catch (Exception ignored){}
+                try {
+                    if (study.getProtocolSection().getOversightModule() != null && study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice() != null)
+                        isFDARegulatedDevice += String.valueOf(study.getProtocolSection().getOversightModule().getIsFdaRegulatedDevice());
+                }catch (Exception ignored){}
+                String containsUSLocation = null;
+                try {
 
-                        while (var14.hasNext()) {
-                            Object o = var14.next();
-                            String link = (String) ((Map) o).get("link");
-                            if (link != null) {
-                                builder.append(link).append(";");
-                            }
-                        }
-
-                        record.setNihReportLink(builder.toString());
+                    if (record.getLocation() != null && record.getLocation().toLowerCase().contains("united states")) {
+                        containsUSLocation = "true";
                     }
+                }catch (Exception ignored){}
+                try {
+                    String isFDARegulated = null;
+                    if (isFDARegulatedDrug.equalsIgnoreCase("true") || isFDARegulatedDevice.equalsIgnoreCase("true") || (containsUSLocation != null)) {
+                        isFDARegulated = "true";
+                    } else {
+                        if (isFDARegulatedDrug.equalsIgnoreCase("false") || isFDARegulatedDevice.equalsIgnoreCase("false"))
+                            isFDARegulated = "false";
+                    }
+                    record.setIsFDARegulated(isFDARegulated);
+                }catch (Exception ignored){}
+                if(study.getProtocolSection().getIdentificationModule()!=null) {
+                    try {
+                        record.setBriefTitle(study.getProtocolSection().getIdentificationModule().getBriefTitle());
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        record.setOfficialTitle(study.getProtocolSection().getIdentificationModule().getOfficialTitle());
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        if (study.getProtocolSection().getIdentificationModule().getAdditionalProperties() != null && study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos") != null) {
+                            ArrayList object = (ArrayList) study.getProtocolSection().getIdentificationModule().getAdditionalProperties().get("secondaryIdInfos");
+                            StringBuilder builder = new StringBuilder();
+                            Iterator var14 = object.iterator();
+
+                            while (var14.hasNext()) {
+                                Object o = var14.next();
+                                String link = (String) ((Map) o).get("link");
+                                if (link != null) {
+                                    builder.append(link).append(";");
+                                }
+                            }
+
+                            record.setNihReportLink(builder.toString());
+                        }
+                    }catch (Exception ignored){}
                 }
-                record.setStudyStatus(study.getProtocolSection().getStatusModule().getOverallStatus());
-                record.setFirstSubmitDate(study.getProtocolSection().getStatusModule().getStudyFirstSubmitDate());
-                record.setEstimatedCompleteDate(study.getProtocolSection().getStatusModule().getCompletionDateStruct().getDate());
-                record.setLastUpdatePostDate(study.getProtocolSection().getStatusModule().getLastUpdatePostDateStruct().getDate());
-                record.setWithHasResults(String.valueOf(study.getHasResults()));
+                if(study.getProtocolSection().getStatusModule()!=null) {
+                    try {
+                        record.setStudyStatus(study.getProtocolSection().getStatusModule().getOverallStatus());
+                    }catch (Exception ignored){}
+                    try {
+                        record.setFirstSubmitDate(study.getProtocolSection().getStatusModule().getStudyFirstSubmitDate());
+                    }catch (Exception ignored){}
+                    try {
+                        record.setEstimatedCompleteDate(study.getProtocolSection().getStatusModule().getCompletionDateStruct().getDate());
+                    }catch (Exception ignored){}
+                    try {
+                        record.setLastUpdatePostDate(study.getProtocolSection().getStatusModule().getLastUpdatePostDateStruct().getDate());
+                    }catch (Exception ignored){}
+                }
+                try {
+                    record.setWithHasResults(String.valueOf(study.getHasResults()));
+                }catch (Exception ignored){}
                 if (!this.existsRecord(record.getNctId())) {
                     this.insert(record);
                     return "inserted";
