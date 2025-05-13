@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ClinicalTrialRecord {
@@ -516,7 +517,7 @@ public class ClinicalTrialRecord {
         }
         }catch (Exception ignored){}
         try{
-            if (this.enrollmentType!=(other.enrollmentType)) {
+            if (!Objects.equals(this.enrollmentType, other.enrollmentType)) {
                 differences.append("   enrollmentType differs: ").append(this.enrollmentType).append(" vs ").append(other.enrollmentType).append("\n");
             }
         }catch (Exception ignored){}
