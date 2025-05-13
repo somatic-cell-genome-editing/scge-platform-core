@@ -16,6 +16,7 @@ public class ClinicalTrialRecord {
     private String indication;
     private String phase;
     private int enrorllmentCount;
+    private String enrollmentType;
     private String location;
     private int numberOfLocations;
     private String eligibilitySex;
@@ -62,6 +63,15 @@ public class ClinicalTrialRecord {
 
     private String withHasResults;
     private String recordStatus;
+
+    public String getEnrollmentType() {
+        return enrollmentType;
+    }
+
+    public void setEnrollmentType(String enrollmentType) {
+        this.enrollmentType = enrollmentType;
+    }
+
     public String getWithHasResults() {
         return withHasResults;
     }

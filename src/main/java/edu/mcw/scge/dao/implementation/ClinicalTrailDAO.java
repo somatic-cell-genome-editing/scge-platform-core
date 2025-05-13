@@ -32,6 +32,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "sponsor_class," +
                 "phases," +
                 "enrollment_count," +
+                "enrollment_type," +
                 "locations," +
                 "number_of_locations," +
                 "eligibility_sex," +
@@ -74,7 +75,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "record_status)"+
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
-                "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
+                "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +"?," +
                 "NOW()," + "NOW()," +
                 "?," + "?," + "?, ?," +"?"+
                 ")";
@@ -86,6 +87,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getSponsorClass(),
                 record.getPhase(),
                 record.getEnrorllmentCount(),
+                record.getEnrollmentType(),
                 record.getLocation(),
                 record.getNumberOfLocations(),
                 record.getEligibilitySex(),
@@ -141,8 +143,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
     }
     public void updateAPIDataFields(ClinicalTrialRecord record) throws Exception {
-        String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,phases=?,enrollment_count=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=?, record_modified_date=NOW(), with_has_results=? where nctid=?";
-        this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(),  record.getPhase(), record.getEnrorllmentCount(), record.getLocation(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAge(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStudyStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(), record.getWithHasResults(),record.getNctId().trim());
+        String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,phases=?,enrollment_count=?,enrollment_type=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=?, record_modified_date=NOW(), with_has_results=? where nctid=?";
+        this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(),  record.getPhase(), record.getEnrorllmentCount(),record.getEnrollmentType(), record.getLocation(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAge(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStudyStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(), record.getWithHasResults(),record.getNctId().trim());
     }
 
    public void insertExternalLink(ClinicalTrialExternalLink link) throws Exception {
@@ -296,6 +298,9 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 }catch (Exception ignored){}
                 try {
                     record.setEnrorllmentCount(study.getProtocolSection().getDesignModule().getEnrollmentInfo().getCount());
+                }catch (Exception ignored){}
+                try {
+                    record.setEnrollmentType(study.getProtocolSection().getDesignModule().getEnrollmentInfo().getType());
                 }catch (Exception ignored){}
                 try {
                     if (study.getProtocolSection().getContactsLocationsModule() != null) {
