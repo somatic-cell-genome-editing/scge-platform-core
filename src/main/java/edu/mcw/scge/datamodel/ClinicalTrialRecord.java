@@ -512,9 +512,15 @@ public class ClinicalTrialRecord {
         }
         }catch (Exception ignored){}try{
         if (this.enrorllmentCount!=(other.enrorllmentCount)) {
-            differences.append("   enrorllmentCount differs: ").append(this.enrorllmentCount).append(" vs ").append(other.enrorllmentCount).append("\n");
+            differences.append("   enrollmentCount differs: ").append(this.enrorllmentCount).append(" vs ").append(other.enrorllmentCount).append("\n");
         }
-        }catch (Exception ignored){}try{
+        }catch (Exception ignored){}
+        try{
+            if (this.enrollmentType!=(other.enrollmentType)) {
+                differences.append("   enrollmentType differs: ").append(this.enrollmentType).append(" vs ").append(other.enrollmentType).append("\n");
+            }
+        }catch (Exception ignored){}
+        try{
         if (!this.   location.equals(other.   location)) {
             differences.append("   location differs: ").append(this.location).append(" vs ").append(other.location).append("\n");
         }
@@ -528,11 +534,11 @@ public class ClinicalTrialRecord {
         }
         }catch (Exception ignored){}try{
         if (!this.  elibilityMinAge.equals(other.  elibilityMinAge)) {
-            differences.append("  elibilityMinAge differs: ").append(this.elibilityMinAge).append(" vs ").append(other.elibilityMinAge).append("\n");
+            differences.append("  eligibilityMinAge differs: ").append(this.elibilityMinAge).append(" vs ").append(other.elibilityMinAge).append("\n");
         }
         }catch (Exception ignored){}try{
         if (!this.  elibilityMaxAge.equals(other.  elibilityMaxAge)) {
-            differences.append("  elibilityMaxAge differs: ").append(this.elibilityMaxAge).append(" vs ").append(other.elibilityMaxAge).append("\n");
+            differences.append("  eligibilityMaxAge differs: ").append(this.elibilityMaxAge).append(" vs ").append(other.elibilityMaxAge).append("\n");
         }
         }catch (Exception ignored){}try{
         if (!this.  standardAge.equals(other.  standardAge)) {
