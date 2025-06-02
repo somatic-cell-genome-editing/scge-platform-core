@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ApplicationDAO extends AbstractDAO {
     public void insert(Application application) throws Exception {
-        String sql="insert into application (application_id," +
+        String sql="insert into ind_application (application_id," +
                 "sponsor_name," +
                 "application_number," +
                 "submission_date," +
@@ -46,7 +46,7 @@ public class ApplicationDAO extends AbstractDAO {
         // TODO
     }
     public Application getApplicationById(int applicationId) throws Exception {
-      String sql="select * from application where application_id=?";
+      String sql="select * from ind_application where application_id=?";
       ApplicationQuery query=new ApplicationQuery(this.getDataSource(), sql);
       List<Application> applicationList=execute(query, applicationId);
       return applicationList.size()>0?applicationList.get(0):null;
@@ -56,12 +56,12 @@ public class ApplicationDAO extends AbstractDAO {
         return null;
     }
     public List<Application> getApplications() throws Exception {
-     String sql="select * from application";
+     String sql="select * from ind_application";
         ApplicationQuery query=new ApplicationQuery(this.getDataSource(), sql);
         return query.execute();
     }
     public List<Application> getApplicationsByGroupId(int groupId) throws Exception {
-        String sql="select * from application where group_id=?";
+        String sql="select * from ind_application where group_id=?";
         ApplicationQuery query=new ApplicationQuery(this.getDataSource(), sql);
         return execute(query, groupId);
     }
