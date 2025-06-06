@@ -43,19 +43,47 @@ public class SectionDAO extends AbstractDAO {
         SectionQuery query=new SectionQuery(this.getDataSource(), sql);
         return execute(query, moduleCode, 1);
     }
-    public List<Section> getLevel2SectionsOfModule(int moduleCode) throws Exception {
-        String sql="select * from ctd_sections where module=? and level=?";
-        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
-        return execute(query, moduleCode, 2);
-    }
-    public List<Section> getLevel3SectionsOfModule(int moduleCode) throws Exception {
-        String sql="select * from ctd_sections where module=? and level=?";
-        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
-        return execute(query, moduleCode, 3);
-    }
-    public List<Section> getLevel4SectionsOfModule(int moduleCode) throws Exception {
-        String sql="select * from ctd_sections where module=? and level=?";
-        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
-        return execute(query, moduleCode, 4);
+
+
+//    public List<Section> getLevel2SectionsOfModule(int moduleCode) throws Exception {
+//        String sql="select * from ctd_sections where module=? and level=?";
+//        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
+//        return execute(query, moduleCode, 2);
+//    }
+//    public List<Section> getLevel3SectionsOfModule(int moduleCode) throws Exception {
+//        String sql="select * from ctd_sections where module=? and level=?";
+//        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
+//        return execute(query, moduleCode, 3);
+//    }
+//    public List<Section> getLevel4SectionsOfModule(int moduleCode) throws Exception {
+//        String sql="select * from ctd_sections where module=? and level=?";
+//        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
+//        return execute(query, moduleCode, 4);
+//    }
+public List<Section> getSectionsOfModuleByLevel(int moduleCode, int level) throws Exception {
+    String sql="select * from ctd_sections where module=? and level=? order by section_code";
+    SectionQuery query=new SectionQuery(this.getDataSource(), sql);
+    List<Section> sections=execute(query, moduleCode, level);
+    return sort(sections);
+}
+    public List<Section> sort(List<Section> sections){
+        sections.sort((s1,s2)->{
+            String[] parts1=s1.getSectionCode().split("\\.");
+            String[] parts2=s2.getSectionCode().split("\\.");
+            int len=Math.max(parts1.length, parts2.length);
+            for(int i=0;i<len;i++){
+                try {
+                    int num1 = i < parts1.length ? Integer.parseInt(parts1[i]) : 0;
+                    int num2 = i < parts2.length ? Integer.parseInt(parts2[i]) : 0;
+                    if (num1 != num2) {
+                        return Integer.compare(num1, num2);
+                    }
+                }catch (Exception ignored){
+
+                }
+            }
+            return 0;
+        });
+        return sections;
     }
 }
