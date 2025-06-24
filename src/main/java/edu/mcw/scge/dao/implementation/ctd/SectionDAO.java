@@ -23,6 +23,25 @@ public class SectionDAO extends AbstractDAO {
         );
 
     }
+    public void update(Section section) throws Exception {
+        String sql="update  ctd_sections set " +
+                "   required_initial_ind=?," +
+                "   submission_timing=?," +
+                "   required_for_marketing_application=?," +
+                "   template_link_text=?," +
+                "   example_link_text=?," +
+                "   submission_format=?," +
+                "   notes=?," +
+                "   description=?," +
+                "   resources=?" +
+                "   where section_code=?";
+        update(sql,
+                section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),
+                section.getTemplateLinkText(), section.getExampleLinkText(),section.getSubmissionFormat(),
+                section.getNotes(), section.getSectionDescription(), section.getResources(), section.getSectionCode()
+        );
+
+    }
     public List<Module> getAllCTDModules(){
         return null;
     }

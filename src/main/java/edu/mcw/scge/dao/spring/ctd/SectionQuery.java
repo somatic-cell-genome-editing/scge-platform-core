@@ -22,6 +22,14 @@ public class SectionQuery extends MappingSqlQuery<Section> {
         section.setLevel(rs.getInt("level"));
         section.setModuleCode(rs.getInt("module"));
         section.setRequiredForInitialIND(rs.getString("required_initial_ind"));
+        section.setNotes(rs.getString("notes"));
+        section.setSectionDescription(rs.getString("description"));
+        section.setExampleLinkText(rs.getString("example_link_text"));
+        section.setTemplateLinkText(rs.getString("template_link_text"));
+        section.setResources(rs.getString("resources"));
+        section.setSubmissionFormat(rs.getString("submission_format"));
+        section.setSubmissionTiming(rs.getString("submission_timing"));
+        section.setRequiredForMarketingApplicationOnly(rs.getString("required_for_marketing_application"));
         return section;
     }
 }

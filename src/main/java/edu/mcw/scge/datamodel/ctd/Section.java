@@ -7,10 +7,82 @@ public class Section extends Module {
     private int sectionId;
     private String sectionCode;
     private String sectionName;
+    private String sectionDescription;
     private List<Section> subsections;
     private String parentId;
     private int level;
     private String requiredForInitialIND;
+    private String requiredForMarketingApplicationOnly;
+    private String submissionTiming;
+    private String templateLinkText;
+    private String exampleLinkText;
+    private String submissionFormat;
+    private String notes;
+    private String resources;
+
+    public String getSectionDescription() {
+        return sectionDescription;
+    }
+
+    public void setSectionDescription(String sectionDescription) {
+        this.sectionDescription = sectionDescription;
+    }
+
+    public String getRequiredForMarketingApplicationOnly() {
+        return requiredForMarketingApplicationOnly;
+    }
+
+    public void setRequiredForMarketingApplicationOnly(String requiredForMarketingApplicationOnly) {
+        this.requiredForMarketingApplicationOnly = requiredForMarketingApplicationOnly;
+    }
+
+    public String getSubmissionTiming() {
+        return submissionTiming;
+    }
+
+    public void setSubmissionTiming(String submissionTiming) {
+        this.submissionTiming = submissionTiming;
+    }
+
+    public String getTemplateLinkText() {
+        return templateLinkText;
+    }
+
+    public void setTemplateLinkText(String templateLinkText) {
+        this.templateLinkText = templateLinkText;
+    }
+
+    public String getExampleLinkText() {
+        return exampleLinkText;
+    }
+
+    public void setExampleLinkText(String exampleLinkText) {
+        this.exampleLinkText = exampleLinkText;
+    }
+
+    public String getSubmissionFormat() {
+        return submissionFormat;
+    }
+
+    public void setSubmissionFormat(String submissionFormat) {
+        this.submissionFormat = submissionFormat;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getResources() {
+        return resources;
+    }
+
+    public void setResources(String resources) {
+        this.resources = resources;
+    }
 
     public String getRequiredForInitialIND() {
         return requiredForInitialIND;
