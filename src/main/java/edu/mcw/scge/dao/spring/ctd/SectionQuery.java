@@ -26,6 +26,7 @@ public class SectionQuery extends MappingSqlQuery<Section> {
         section.setSectionDescription(rs.getString("description"));
         section.setExampleLinkText(rs.getString("example_link_text"));
         section.setTemplateLinkText(rs.getString("template_link_text"));
+        section.setPathToFile(rs.getString("path_to_file"));
         section.setResources(rs.getString("resources"));
         section.setSubmissionFormat(rs.getString("submission_format"));
         section.setSubmissionTiming(rs.getString("submission_timing"));

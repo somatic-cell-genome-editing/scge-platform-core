@@ -28,6 +28,7 @@ public class SectionDAO extends AbstractDAO {
                 "   required_initial_ind=?," +
                 "   submission_timing=?," +
                 "   required_for_marketing_application=?," +
+                "   path_to_file=?," +
                 "   template_link_text=?," +
                 "   example_link_text=?," +
                 "   submission_format=?," +
@@ -36,7 +37,7 @@ public class SectionDAO extends AbstractDAO {
                 "   resources=?" +
                 "   where section_code=?";
         update(sql,
-                section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),
+                section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),section.getPathToFile(),
                 section.getTemplateLinkText(), section.getExampleLinkText(),section.getSubmissionFormat(),
                 section.getNotes(), section.getSectionDescription(), section.getResources(), section.getSectionCode()
         );

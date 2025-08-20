@@ -14,6 +14,7 @@ public class Section extends Module {
     private String requiredForInitialIND;
     private String requiredForMarketingApplicationOnly;
     private String submissionTiming;
+    private String pathToFile;
     private String templateLinkText;
     private String exampleLinkText;
     private String submissionFormat;
@@ -138,5 +139,13 @@ public class Section extends Module {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public String getPathToFile() {
+        return pathToFile;
+    }
+
+    public void setPathToFile(String pathToFile) {
+        this.pathToFile = pathToFile;
     }
 }
