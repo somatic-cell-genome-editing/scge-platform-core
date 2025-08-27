@@ -86,6 +86,12 @@ public List<Section> getSectionsOfModuleByLevel(int moduleCode, int level) throw
     List<Section> sections=execute(query, moduleCode, level);
     return sort(sections);
 }
+    public Section getSectionBySectionCode(String sectionCode) throws Exception {
+        String sql="select * from ctd_sections where section_code=?";
+        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
+        List<Section> sections=execute(query, sectionCode);
+        return (sections!=null && sections.size()>0)?sections.get(0):null;
+    }
     public List<Section> sort(List<Section> sections){
         sections.sort((s1,s2)->{
             String[] parts1=s1.getSectionCode().split("\\.");
