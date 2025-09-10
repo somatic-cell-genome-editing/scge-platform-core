@@ -20,7 +20,9 @@ public class CTDResourceQuery extends MappingSqlQuery<CTDResource> {
         resource.setResourceUrl(rs.getString("resource_url"));
         resource.setCtdSection(rs.getString("ctd_section"));
         resource.setDateIssued(rs.getString("date_issued"));
-
+        resource.setType(rs.getString("type"));
+        resource.setFilePath(rs.getString("file_path"));
+        resource.setSource(rs.getString("source"));
         return resource;
     }
 }

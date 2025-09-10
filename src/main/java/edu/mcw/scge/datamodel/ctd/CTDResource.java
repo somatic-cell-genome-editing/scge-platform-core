@@ -7,6 +7,9 @@ public class CTDResource {
     private String resourceUrl;
     private String ctdSection;
     private String dateIssued;
+    private String source;
+    private String type;
+    private String filePath;
 
     public int getResourceId() {
         return resourceId;
@@ -54,5 +57,29 @@ public class CTDResource {
 
     public void setDateIssued(String dateIssued) {
         this.dateIssued = dateIssued;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }
