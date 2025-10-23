@@ -13,9 +13,35 @@ public class CTDResourceDAO extends AbstractDAO {
         update(sql,resource.getResourceName(), resource.getResourceUrl(), resource.getResourceDescription(), resource.getCtdSection(), resource.getDateIssued()
         ,resource.getSource(), resource.getType(),resource.getFilePath());
     }
+    public void update(CTDResource resource) throws Exception {
+        String sql="update ctd_resources set " +
+                "resource_name=?, " +
+                "resource_url=?, " +
+                "resource_description=?, " +
+                "date_issued=?," +
+                "source=?, " +
+                "type=?, " +
+                "file_path=?" +
+                "where ctd_section=?   ";
+        update(sql,resource.getResourceName(), resource.getResourceUrl(), resource.getResourceDescription(),  resource.getDateIssued()
+                ,resource.getSource(), resource.getType(),resource.getFilePath(),resource.getCtdSection());
+    }
     public List<CTDResource> getResourcesBySection(String sectionCode) throws Exception {
         String sql="select * from ctd_resources where ctd_section=?";
         CTDResourceQuery query=new CTDResourceQuery(this.getDataSource(), sql);
         return execute(query, sectionCode);
+    }
+    public List<CTDResource> getCTDResource(CTDResource resource) throws Exception {
+        String sql="select * from ctd_resources where ctd_section=?" +
+                "   and resource_name=?, " +
+                "   and resource_url=?, " +
+                "   and resource_description=?, " +
+                "   and date_issued=?," +
+                "   and source=?, " +
+                "   and type=?, " +
+                "   and file_path=?" ;
+        CTDResourceQuery query=new CTDResourceQuery(this.getDataSource(), sql);
+        return execute(query,resource.getCtdSection() ,resource.getResourceName(), resource.getResourceUrl(), resource.getResourceDescription(),  resource.getDateIssued()
+                ,resource.getSource(), resource.getType(),resource.getFilePath());
     }
 }

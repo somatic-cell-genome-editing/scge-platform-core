@@ -1,6 +1,7 @@
 package edu.mcw.scge.dao.implementation;
 
 import edu.mcw.scge.dao.AbstractDAO;
+import edu.mcw.scge.dao.spring.CountQuery;
 import edu.mcw.scge.dao.spring.DocumentQuery;
 import edu.mcw.scge.datamodel.Application;
 import edu.mcw.scge.datamodel.Document;
@@ -45,6 +46,11 @@ public class DocumentDAO extends AbstractDAO {
         DocumentQuery query=new DocumentQuery(this.getDataSource(), sql);
 
         return execute(query, applicationId);
+    }
+    public Integer getAllDocumentsCount() throws Exception {
+        String sql="select count(*) from document ";
+        CountQuery query=new CountQuery(this.getDataSource(), sql);
+        return  query.getCount();
     }
     public Document getActiveDocumentByName(String docName, int applicationId, String sponsorName, int module) throws Exception {
         String sql="select * from document where  application_id=? and sponsor_name=? and module=? and document_name=? and status=? and version in ( " +
