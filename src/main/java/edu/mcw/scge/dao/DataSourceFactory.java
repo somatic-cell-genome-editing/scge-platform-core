@@ -14,6 +14,18 @@ public class DataSourceFactory {
     public DataSource getDataSource() throws Exception {
         return getDataSource("scgeplatform");
     }
+
+    public DataSource getScgePlatformDataSource() throws Exception{
+        return getDataSource("scgeplatform");
+    }
+
+    public DataSource getScgeRagDataSource() throws Exception{
+        return getDataSource("scgerag");
+    }
+
+    public DataSource getScgePlatformCurDataSource() throws Exception{
+        return getDataSource("scgeplatformcur");
+    }
     public DataSource getDataSource(String domain) throws Exception{
 
         try{
