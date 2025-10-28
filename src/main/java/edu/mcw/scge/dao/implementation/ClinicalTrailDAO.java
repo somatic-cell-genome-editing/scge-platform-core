@@ -18,11 +18,28 @@ import org.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
 
 
+import javax.sql.DataSource;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClinicalTrailDAO extends AbstractDAO {
     public Logger logger= LogManager.getLogger("clinicalTrials");
+    private DataSource customDataSource = null;
+
+    public ClinicalTrailDAO() {
+        super();
+    }
+
+    // Constructor with custom datasource
+    public ClinicalTrailDAO(DataSource dataSource) {
+        this.customDataSource = dataSource;
+    }
+
+    @Override
+    public DataSource getDataSource() throws Exception {
+        return customDataSource != null ? customDataSource : super.getDataSource();
+    }
+
     public void insert(ClinicalTrialRecord record) throws Exception {
         String sql="insert into clinical_trial_record (nctid, " +
                 "description," +
@@ -482,6 +499,13 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public void deleteAdditionalInfo(String nctId, String propertyName, String propertyValue) throws Exception{
         String sql = "delete from clinical_trial_additional_info where nct_id=? and property_name=? and property_value=?";
         update(sql, nctId, propertyName, propertyValue);
+    }
+
+    public List<String>getAllNctIds() throws Exception{
+        String sql = """
+                select nctid from clinical_trial_record
+                """;
+        return StringListQuery.execute(this,sql);
     }
 
 }
