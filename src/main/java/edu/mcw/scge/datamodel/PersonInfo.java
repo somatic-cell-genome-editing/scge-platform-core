@@ -7,25 +7,12 @@ import java.io.Serializable;
  */
 public class PersonInfo implements Serializable {
     private int personId;
-    private int groupId;
-    //private int subGroupId;
+    private int projectId;
     private int roleKey;
-    private int grantId;
-    private String groupName;
-    private String groupType;
-    //private String subGroupName;
-    private String grantTitle;
-    private String grantInitiative;
+    private String projectTitle;
     private String role;
 
 
-    public String getGroupType() {
-        return groupType;
-    }
-
-    public void setGroupType(String groupType) {
-        this.groupType = groupType;
-    }
 
     public int getPersonId() {
         return personId;
@@ -45,13 +32,6 @@ public class PersonInfo implements Serializable {
 
 
 
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
 
     public int getRoleKey() {
         return roleKey;
@@ -61,36 +41,19 @@ public class PersonInfo implements Serializable {
         this.roleKey = roleKey;
     }
 
-    public int getGrantId() {
-        return grantId;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setGrantId(int grantId) {
-        this.grantId = grantId;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getProjectTitle() {
+        return projectTitle;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
     }
-
-    public String getGrantTitle() {
-        return grantTitle;
-    }
-
-    public void setGrantTitle(String grantTitle) {
-        this.grantTitle = grantTitle;
-    }
-
-    public String getGrantInitiative() {
-        return grantInitiative;
-    }
-
-    public void setGrantInitiative(String grantInitiative) {
-        this.grantInitiative = grantInitiative;
-    }
-
 }

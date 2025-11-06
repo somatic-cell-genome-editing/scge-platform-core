@@ -33,7 +33,6 @@ public class PersonQuery extends MappingSqlQuery<Person> {
                .email_lc(rs.getString("email_lc"))
         .otherId(rs.getString("other_id"))
         .googleSub(rs.getString("google_id"))
-        .address(rs.getString("address"))
         .phone(rs.getString("phone"))
       //  .grantId(rs.getInt("project_id"))
         .createdDate(rs.getString("created_date"))
