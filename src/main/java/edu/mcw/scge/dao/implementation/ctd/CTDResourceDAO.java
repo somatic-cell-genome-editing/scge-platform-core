@@ -33,12 +33,12 @@ public class CTDResourceDAO extends AbstractDAO {
     }
     public List<CTDResource> getCTDResource(CTDResource resource) throws Exception {
         String sql="select * from ctd_resources where ctd_section=?" +
-                "   and resource_name=?, " +
-                "   and resource_url=?, " +
-                "   and resource_description=?, " +
-                "   and date_issued=?," +
-                "   and source=?, " +
-                "   and type=?, " +
+                "   and resource_name=? " +
+                "   and resource_url=? " +
+                "   and resource_description=? " +
+                "   and date_issued=?" +
+                "   and source=? " +
+                "   and type=? " +
                 "   and file_path=?" ;
         CTDResourceQuery query=new CTDResourceQuery(this.getDataSource(), sql);
         return execute(query,resource.getCtdSection() ,resource.getResourceName(), resource.getResourceUrl(), resource.getResourceDescription(),  resource.getDateIssued()
