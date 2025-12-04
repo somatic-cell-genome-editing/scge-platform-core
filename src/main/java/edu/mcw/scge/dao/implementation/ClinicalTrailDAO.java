@@ -212,11 +212,35 @@ public class ClinicalTrailDAO extends AbstractDAO {
         ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
         return query.execute();
     }
+    public List<ClinicalTrialRecord> getAllActiveClinicalTrailRecords() throws Exception {
+        String sql="select * from clinical_trial_record ";
+        ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
+        return query.execute();
+    }
 
     public List<ClinicalTrialRecord> getClinicalTrailRecordByNctId(String nctId) throws Exception {
         String sql="select * from clinical_trial_record where nctid=?";
         ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
         return execute(query, nctId);
+    }
+    public List<ClinicalTrialRecord> getTodayModifiedRecords() throws Exception {
+        String sql= """
+                SELECT *
+                FROM clinical_trial_record
+                WHERE record_modified_date > record_creation_date
+                  AND record_modified_date = CURRENT_DATE;
+                """;
+        ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
+        return query.execute();
+    }
+    public List<String> getClinicalTrialLogMessages() throws Exception {
+        String sql= """
+                SELECT message
+                FROM clinical_trial_log_events
+                WHERE timestamp::date = CURRENT_DATE and level='INFO'
+                """;
+        StringListQuery query=new StringListQuery(this.getDataSource(), sql);
+                return query.execute();
     }
 
     public ClinicalTrialRecord getSingleClinicalTrailRecordByNctId(String nctId) throws Exception{
