@@ -22,6 +22,7 @@ public class SCGEContext {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("HOSTNAME:"+ hostname);
     }
 
     public static boolean isProduction() throws UnknownHostException {
