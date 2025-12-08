@@ -654,11 +654,11 @@ public class ClinicalTrialRecord {
 
         }catch (Exception e){}
 
-        if(!record.getStudyStatus().equals("")) record.setStudyStatus(formatFieldVal(record.getStudyStatus()));
-        if(!record.getSponsorClass().equals("") && !record.getSponsorClass().equalsIgnoreCase("NIH")) record.setSponsorClass(formatFieldVal(record.getSponsorClass()));
-        if(!record.getPhase().equals("")) record.setPhase(formatFieldVal(record.getPhase()));
-        if(!record.getStandardAge().equals("")) record.setStandardAge(formatFieldVal(record.getStandardAge()));
-        if(!record.getWithHasResults().equals("")) record.setWithHasResults(formatFieldVal(record.getWithHasResults()));
+        if(record.getStudyStatus()!=null && !record.getStudyStatus().equals("")) record.setStudyStatus(formatFieldVal(record.getStudyStatus()));
+        if(record.getSponsorClass()!=null && !record.getSponsorClass().equals("") && !record.getSponsorClass().equalsIgnoreCase("NIH")) record.setSponsorClass(formatFieldVal(record.getSponsorClass()));
+        if(record.getPhase()!=null && !record.getPhase().equals("")) record.setPhase(formatFieldVal(record.getPhase()));
+        if(record.getStandardAge()!=null && !record.getStandardAge().equals("")) record.setStandardAge(formatFieldVal(record.getStandardAge()));
+        if(record.getWithHasResults()!=null && !record.getWithHasResults().equals("")) record.setWithHasResults(formatFieldVal(record.getWithHasResults()));
         return record;
     }
 
