@@ -25,7 +25,9 @@ public class ClinicalTrialFieldChange {
     public ClinicalTrialFieldChange(String nctId, String fieldName, String oldValue, String newValue, String updateBy) {
         this.nctId = nctId;
         this.fieldName = fieldName;
+        if(oldValue!=null)
         this.oldValue = formatFieldVal(oldValue);
+        if(newValue!=null)
         this.newValue = formatFieldVal(newValue);
         this.updateBy=updateBy;
     }
