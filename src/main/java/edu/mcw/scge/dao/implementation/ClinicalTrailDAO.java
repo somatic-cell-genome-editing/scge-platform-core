@@ -637,7 +637,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
         compareField(changes, nctId, "last_update_post_date", existing.getLastUpdatePostDate(), newRecord.getLastUpdatePostDate(), updateDate, updateBy);
         compareField(changes, nctId, "browse_condition_terms", existing.getBrowseConditionTerms(), newRecord.getBrowseConditionTerms(), updateDate, updateBy);
         compareField(changes, nctId, "with_has_results", existing.getWithHasResults(), newRecord.getWithHasResults(), updateDate, updateBy);
-        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), updateDate, updateBy);
+//        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), updateDate, updateBy);
 
         return changes;
     }
