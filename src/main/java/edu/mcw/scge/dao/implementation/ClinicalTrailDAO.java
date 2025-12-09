@@ -444,6 +444,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
 
         }
     }
+    public List<ClinicalTrialFieldChange> getClinicalTrialFieldChangeRecord(ClinicalTrialFieldChange fieldRecord) throws Exception {
+        String sql="select * from clinical_trial_field_history where nct_id=? and field_name=?";
+        ClinicalTrialFieldChangeQuery query=new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+        return execute(query, fieldRecord.getNctId(), fieldRecord.getFieldName());
+
+    }
 
     public void downloadClinicalTrails(List<String> nctIds) throws Exception {
         if (nctIds.size() > 0) {
@@ -543,13 +549,35 @@ public class ClinicalTrailDAO extends AbstractDAO {
             change.getUpdateBy()
         );
     }
-
+    /**
+     * update a single field change record into the history table
+     */
+    public void updateFieldChange(ClinicalTrialFieldChange change) throws Exception {
+        String sql = """
+            update  clinical_trial_field_history set old_value=?, new_value=?, changed_at=?, update_date=?, update_by=?
+            ( old_value, new_value, changed_at, update_date, update_by)
+            VALUES ( ?, ?, NOW(), CAST(NULLIF(?, '') AS DATE), ?)
+            WHERE  nct_id=? and field_name=?
+            """;
+        update(sql,
+                change.getOldValue(),
+                change.getNewValue(),
+                change.getUpdateDate(),
+                change.getUpdateBy(),
+                change.getNctId(),
+                change.getFieldName());
+    }
     /**
      * Insert multiple field changes in batch
      */
     public void insertFieldChanges(List<ClinicalTrialFieldChange> changes) throws Exception {
         for (ClinicalTrialFieldChange change : changes) {
-            insertFieldChange(change);
+            List<ClinicalTrialFieldChange> changeRecords=getClinicalTrialFieldChangeRecord(change);
+            if(changeRecords.size()>0) {
+               updateFieldChange(change);
+            }else{
+                insertFieldChange(change);
+            }
         }
     }
 
@@ -681,6 +709,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
             List<ClinicalTrialFieldChange> changes = compareRecordsAPIFields(existingRecord, record, updateBy);
 
             if (!changes.isEmpty()) {
+
                 // Log changes to history table
                 insertFieldChanges(changes);
 
