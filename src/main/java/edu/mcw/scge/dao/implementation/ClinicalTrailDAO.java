@@ -151,8 +151,20 @@ public class ClinicalTrailDAO extends AbstractDAO {
     }
 
     public void updateCuratedDataFields(ClinicalTrialRecord record) throws Exception {
+        // Track changes before updating
+        String nctId = record.getnCTNumber() != null ? record.getnCTNumber().trim() : record.getNctId().trim();
+        ClinicalTrialRecord existingRecord = getSingleClinicalTrailRecordByNctId(nctId);
+
+        if (existingRecord != null) {
+            List<ClinicalTrialFieldChange> changes = compareCuratedFields(existingRecord, record, "curator");
+            if (!changes.isEmpty()) {
+                insertFieldChanges(changes);
+            }
+        }
+
+        // Perform the update
         String sql = "update clinical_trial_record set target_gene=?,therapy_type=?,therapy_route=?,mechanism_of_action=?,route_of_administration=?,drug_product_type=?,target_tissue=?,delivery_system=?,vector_type=?,editor_type=?,dose_1=?,dose_2=?,dose_3=?,dose_4=?,dose_5=?,recent_updates=?, patents=?, compound_name=?, indication=?, record_modified_date=NOW(), record_status=? where nctid=? ";
-        this.update(sql, record.getTargetGeneOrVariant(), record.getTherapyType(), record.getTherapyRoute(), record.getMechanismOfAction(), record.getRouteOfAdministration(), record.getDrugProductType(), record.getTargetTissueOrCell(), record.getDeliverySystem(), record.getVectorType(), record.getEditorType(), record.getDose1(), record.getDose2(), record.getDose3(), record.getDose4(), record.getDose5(), record.getRecentUpdates(), record.getPatents(), record.getCompoundName(), record.getIndication(),record.getRecordStatus(),record.getnCTNumber().trim());
+        this.update(sql, record.getTargetGeneOrVariant(), record.getTherapyType(), record.getTherapyRoute(), record.getMechanismOfAction(), record.getRouteOfAdministration(), record.getDrugProductType(), record.getTargetTissueOrCell(), record.getDeliverySystem(), record.getVectorType(), record.getEditorType(), record.getDose1(), record.getDose2(), record.getDose3(), record.getDose4(), record.getDose5(), record.getRecentUpdates(), record.getPatents(), record.getCompoundName(), record.getIndication(),record.getRecordStatus(),nctId);
     }
 
 
@@ -631,6 +643,44 @@ public class ClinicalTrailDAO extends AbstractDAO {
             """;
         ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
         return execute(query, nctId, fieldName);
+    }
+
+    /**
+     * Compare two records and return list of manually curated field changes
+     */
+    public List<ClinicalTrialFieldChange> compareCuratedFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
+        List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+        String nctId = newRecord.getNctId();
+        String today = java.time.LocalDate.now().toString();
+
+        // Fields from updateCuratedDataFields()
+        compareField(changes, nctId, "target_gene", existing.getTargetGeneOrVariant(), newRecord.getTargetGeneOrVariant(), today, updateBy);
+        compareField(changes, nctId, "therapy_type", existing.getTherapyType(), newRecord.getTherapyType(), today, updateBy);
+        compareField(changes, nctId, "therapy_route", existing.getTherapyRoute(), newRecord.getTherapyRoute(), today, updateBy);
+        compareField(changes, nctId, "mechanism_of_action", existing.getMechanismOfAction(), newRecord.getMechanismOfAction(), today, updateBy);
+        compareField(changes, nctId, "route_of_administration", existing.getRouteOfAdministration(), newRecord.getRouteOfAdministration(), today, updateBy);
+        compareField(changes, nctId, "drug_product_type", existing.getDrugProductType(), newRecord.getDrugProductType(), today, updateBy);
+        compareField(changes, nctId, "target_tissue", existing.getTargetTissueOrCell(), newRecord.getTargetTissueOrCell(), today, updateBy);
+        compareField(changes, nctId, "delivery_system", existing.getDeliverySystem(), newRecord.getDeliverySystem(), today, updateBy);
+        compareField(changes, nctId, "vector_type", existing.getVectorType(), newRecord.getVectorType(), today, updateBy);
+        compareField(changes, nctId, "editor_type", existing.getEditorType(), newRecord.getEditorType(), today, updateBy);
+        compareField(changes, nctId, "dose_1", existing.getDose1(), newRecord.getDose1(), today, updateBy);
+        compareField(changes, nctId, "dose_2", existing.getDose2(), newRecord.getDose2(), today, updateBy);
+        compareField(changes, nctId, "dose_3", existing.getDose3(), newRecord.getDose3(), today, updateBy);
+        compareField(changes, nctId, "dose_4", existing.getDose4(), newRecord.getDose4(), today, updateBy);
+        compareField(changes, nctId, "dose_5", existing.getDose5(), newRecord.getDose5(), today, updateBy);
+        compareField(changes, nctId, "recent_updates", existing.getRecentUpdates(), newRecord.getRecentUpdates(), today, updateBy);
+        //compareField(changes, nctId, "patents", existing.getPatents(), newRecord.getPatents(), today, updateBy);
+        compareField(changes, nctId, "compound_name", existing.getCompoundName(), newRecord.getCompoundName(), today, updateBy);
+        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), today, updateBy);
+        compareField(changes, nctId, "record_status", existing.getRecordStatus(), newRecord.getRecordStatus(), today, updateBy);
+
+        // Fields from updateSomeNewFieldsDataFields()
+        compareField(changes, nctId, "development_status", existing.getDevelopmentStatus(), newRecord.getDevelopmentStatus(), today, updateBy);
+        compareField(changes, nctId, "indication_doid", existing.getIndicationDOID(), newRecord.getIndicationDOID(), today, updateBy);
+        compareField(changes, nctId, "compound_description", existing.getCompoundDescription(), newRecord.getCompoundDescription(), today, updateBy);
+
+        return changes;
     }
 
     /**
