@@ -566,10 +566,9 @@ public class ClinicalTrailDAO extends AbstractDAO {
      */
     public void updateFieldChange(ClinicalTrialFieldChange change) throws Exception {
         String sql = """
-            update  clinical_trial_field_history set old_value=?, new_value=?, changed_at=?, update_date=?, update_by=?
-            ( old_value, new_value, changed_at, update_date, update_by)
-            VALUES ( ?, ?, NOW(), CAST(NULLIF(?, '') AS DATE), ?)
-            WHERE  nct_id=? and field_name=?
+            UPDATE clinical_trial_field_history
+            SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?
+            WHERE nct_id=? AND field_name=?
             """;
         update(sql,
                 change.getOldValue(),
