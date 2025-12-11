@@ -478,12 +478,29 @@ public class ClinicalTrailDAO extends AbstractDAO {
     }
 
     public void insertAlias(Alias alias) throws Exception {
+        // Track new alias (old_value = null)
+        List<ClinicalTrialFieldChange> changes = compareAliasFields(null, alias, "curator");
+        if (!changes.isEmpty()) {
+            insertFieldChanges(changes);
+        }
+
+        // Perform the insert
         String sql="insert into alias(key, identifier, created_date, notes, alias_type_lc, alias,field_name)" +
                 "   values(NEXTVAL('alias_key_seq'),?,NOW(),?,?,?,?)";
         update(sql, alias.getIdentifier(), alias.getNotes(), alias.getAliasTypeLC(), alias.getAlias(), alias.getFieldName());
     }
 
     public void updateAlias(Alias alias) throws Exception {
+        // Track changes before updating
+        Alias existingAlias = getAliasByKey(alias.getKey());
+        if (existingAlias != null) {
+            List<ClinicalTrialFieldChange> changes = compareAliasFields(existingAlias, alias, "curator");
+            if (!changes.isEmpty()) {
+                insertFieldChanges(changes);
+            }
+        }
+
+        // Perform the update
         String sql = "update alias set " +
                 "identifier=?, " +
                 "notes=?, " +
@@ -507,7 +524,24 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return execute(query, identifier, fieldName.toLowerCase());
     }
 
+    public Alias getAliasByKey(int key) throws Exception {
+        String sql = "select * from alias where key=?";
+        AliasQuery query = new AliasQuery(this.getDataSource(), sql);
+        List<Alias> aliases = execute(query, key);
+        return aliases.isEmpty() ? null : aliases.get(0);
+    }
+
     public void deleteAlias(int key) throws Exception{
+        // Track deletion before deleting (new_value = null)
+        Alias existingAlias = getAliasByKey(key);
+        if (existingAlias != null) {
+            List<ClinicalTrialFieldChange> changes = compareAliasFields(existingAlias, null, "curator");
+            if (!changes.isEmpty()) {
+                insertFieldChanges(changes);
+            }
+        }
+
+        // Perform the delete
         String sql = "Delete from alias where key=?";
         update(sql,key);
     }
@@ -678,6 +712,29 @@ public class ClinicalTrailDAO extends AbstractDAO {
         compareField(changes, nctId, "development_status", existing.getDevelopmentStatus(), newRecord.getDevelopmentStatus(), today, updateBy);
         compareField(changes, nctId, "indication_doid", existing.getIndicationDOID(), newRecord.getIndicationDOID(), today, updateBy);
         compareField(changes, nctId, "compound_description", existing.getCompoundDescription(), newRecord.getCompoundDescription(), today, updateBy);
+
+        return changes;
+    }
+
+    /**
+     * Compare two alias records and return list of field changes
+     */
+    public List<ClinicalTrialFieldChange> compareAliasFields(Alias existing, Alias newAlias, String updateBy) {
+        List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+        String nctId = newAlias != null ? newAlias.getIdentifier() : (existing != null ? existing.getIdentifier() : null);
+        String today = java.time.LocalDate.now().toString();
+
+        String oldValue = existing != null ? existing.getAlias() : null;
+        String newValue = newAlias != null ? newAlias.getAlias() : null;
+        compareField(changes, nctId, "alias_value", oldValue, newValue, today, updateBy);
+
+        oldValue = existing != null ? existing.getAliasTypeLC() : null;
+        newValue = newAlias != null ? newAlias.getAliasTypeLC() : null;
+        compareField(changes, nctId, "alias_type", oldValue, newValue, today, updateBy);
+
+        oldValue = existing != null ? existing.getNotes() : null;
+        newValue = newAlias != null ? newAlias.getNotes() : null;
+        compareField(changes, nctId, "alias_notes", oldValue, newValue, today, updateBy);
 
         return changes;
     }
