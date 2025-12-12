@@ -72,6 +72,9 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
             else  record.setWithHasResults("");
         }catch (Exception exception){}
         record.setRecordStatus(rs.getString("record_status"));
+        try{
+            record.setRecordModifiedDate(rs.getDate("record_modified_date"));
+        }catch (Exception ignored){}
             return record.formatRecordValue(record);
     }
 

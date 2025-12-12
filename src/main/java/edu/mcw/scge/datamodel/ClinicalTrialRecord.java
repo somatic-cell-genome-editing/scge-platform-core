@@ -2,6 +2,7 @@ package edu.mcw.scge.datamodel;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -64,6 +65,16 @@ public class ClinicalTrialRecord {
 
     private String withHasResults;
     private String recordStatus;
+
+    private Date recordModifiedDate;
+
+    public Date getRecordModifiedDate() {
+        return recordModifiedDate;
+    }
+
+    public void setRecordModifiedDate(Date recordModifiedDate) {
+        this.recordModifiedDate = recordModifiedDate;
+    }
 
     public String getEnrollmentType() {
         return enrollmentType;
