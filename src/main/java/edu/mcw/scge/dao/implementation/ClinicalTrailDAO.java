@@ -2,6 +2,7 @@ package edu.mcw.scge.dao.implementation;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import edu.mcw.scge.dao.AbstractDAO;
 import edu.mcw.scge.dao.spring.*;
 import edu.mcw.scge.datamodel.Alias;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class ClinicalTrailDAO extends AbstractDAO {
     public Logger logger= LogManager.getLogger("clinicalTrials");
     private DataSource customDataSource = null;
+    Gson gson=new Gson();
 
     public ClinicalTrailDAO() {
         super();
@@ -182,7 +184,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
     }
    public void insertExternalLink(ClinicalTrialExternalLink link) throws Exception {
-        String today = java.time.LocalDate.now().toString();
+       LocalDate localDate = LocalDate.now();
+
+       // Convert the LocalDate to a java.sql.Date
+       java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+       String today = sqlDate.toString();
         String fieldName = "ext_link_" + link.getId();
         String newValue = link.getType() + " | " + link.getName() + " | " + link.getLink();
         ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, null, newValue, "curator");
@@ -212,7 +218,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
         // Track changes before updating
         ClinicalTrialExternalLink existingLink = getExternalLinkById(link.getId());
         if (existingLink != null) {
-            String today = java.time.LocalDate.now().toString();
+            LocalDate localDate = LocalDate.now();
+
+            // Convert the LocalDate to a java.sql.Date
+            java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+            String today = sqlDate.toString();
             String fieldName = "ext_link_" + link.getId();
             String oldValue = existingLink.getType() + " | " + existingLink.getName() + " | " + existingLink.getLink();
             String newValue = link.getType() + " | " + link.getName() + " | " + link.getLink();
@@ -234,7 +244,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
         // Track deletion before deleting (new_value = null)
         ClinicalTrialExternalLink existingLink = getExternalLinkById(linkId);
         if (existingLink != null) {
-            String today = java.time.LocalDate.now().toString();
+            LocalDate localDate = LocalDate.now();
+
+            // Convert the LocalDate to a java.sql.Date
+            java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+            String today = sqlDate.toString();
             String fieldName = "ext_link_" + linkId;
             String oldValue = existingLink.getType() + " | " + existingLink.getName() + " | " + existingLink.getLink();
             ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(existingLink.getNctId(), fieldName, oldValue, null, "curator");
@@ -653,34 +667,16 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public void updateFieldChange(ClinicalTrialFieldChange change) throws Exception {
         String sql = """
             UPDATE clinical_trial_field_history
-            SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?
+            SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?
             WHERE nct_id=? AND field_name=?
             """;
         update(sql,
                 change.getOldValue(),
                 change.getNewValue(),
-                parseDate(change.getUpdateDate()),
+               change.getUpdateDate(),
                 change.getUpdateBy(),
                 change.getNctId(),
                 change.getFieldName());
-    }
-    private java.sql.Date parseDate(String date) {
-        if (date == null || date.isBlank()) {
-            return null;
-        }
-        try {
-            // Try ISO format first (yyyy-MM-dd)
-            LocalDate ld = LocalDate.parse(date);
-            return java.sql.Date.valueOf(ld);
-        } catch (Exception e1) {
-            try {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
-                LocalDate ld = LocalDate.parse(date, fmt);
-                return java.sql.Date.valueOf(ld);
-            } catch (Exception e2) {
-                throw new IllegalArgumentException("Invalid date format: " + date, e2);
-            }
-        }
     }
     /**
      * Insert multiple field changes in batch
@@ -819,7 +815,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public List<ClinicalTrialFieldChange> compareRecordsAPIFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
         List<ClinicalTrialFieldChange> changes = new ArrayList<>();
         String nctId = newRecord.getNctId();
-        String updateDate = newRecord.getLastUpdatePostDate();
+        String updateDate = String.valueOf(newRecord.getRecordModifiedDate());
 
         // Compare each tracked field
         compareField(changes, nctId, "description", existing.getDescription(), newRecord.getDescription(), updateDate, updateBy);
