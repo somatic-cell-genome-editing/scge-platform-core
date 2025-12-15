@@ -748,7 +748,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public List<ClinicalTrialFieldChange> compareCuratedFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
         List<ClinicalTrialFieldChange> changes = new ArrayList<>();
         String nctId = newRecord.getNctId();
-        String today = java.time.LocalDate.now().toString();
+        LocalDate localDate = LocalDate.now();
+
+        // Convert the LocalDate to a java.sql.Date
+        java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+        String today = sqlDate.toString();
 
         // Fields from updateCuratedDataFields()
         compareField(changes, nctId, "target_gene", existing.getTargetGeneOrVariant(), newRecord.getTargetGeneOrVariant(), today, updateBy);
