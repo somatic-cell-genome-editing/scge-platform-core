@@ -2,6 +2,7 @@ package edu.mcw.scge.dao.implementation;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import edu.mcw.scge.dao.AbstractDAO;
 import edu.mcw.scge.dao.spring.*;
 import edu.mcw.scge.datamodel.Alias;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class ClinicalTrailDAO extends AbstractDAO {
     public Logger logger= LogManager.getLogger("clinicalTrials");
     private DataSource customDataSource = null;
+    Gson gson=new Gson();
 
     public ClinicalTrailDAO() {
         super();
@@ -681,7 +683,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
             update(sql,
                     change.getOldValue(),
                     change.getNewValue(),
-                    parseDate(change.getUpdateDate()),
+                    change.getUpdateDate(),
                     change.getUpdateBy(),
                     change.getFieldName(),
                     change.getNctId(),
@@ -696,28 +698,10 @@ public class ClinicalTrailDAO extends AbstractDAO {
             update(sql,
                     change.getOldValue(),
                     change.getNewValue(),
-                    parseDate(change.getUpdateDate()),
+                    change.getUpdateDate(),
                     change.getUpdateBy(),
                     change.getNctId(),
                     change.getFieldName());
-        }
-    }
-    private java.sql.Date parseDate(String date) {
-        if (date == null || date.isBlank()) {
-            return null;
-        }
-        try {
-            // Try ISO format first (yyyy-MM-dd)
-            LocalDate ld = LocalDate.parse(date);
-            return java.sql.Date.valueOf(ld);
-        } catch (Exception e1) {
-            try {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
-                LocalDate ld = LocalDate.parse(date, fmt);
-                return java.sql.Date.valueOf(ld);
-            } catch (Exception e2) {
-                throw new IllegalArgumentException("Invalid date format: " + date, e2);
-            }
         }
     }
     /**
@@ -857,7 +841,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public List<ClinicalTrialFieldChange> compareRecordsAPIFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
         List<ClinicalTrialFieldChange> changes = new ArrayList<>();
         String nctId = newRecord.getNctId();
-        String updateDate = newRecord.getLastUpdatePostDate();
+        String updateDate = String.valueOf(newRecord.getRecordModifiedDate());
 
         // Compare each tracked field
         compareField(changes, nctId, "description", existing.getDescription(), newRecord.getDescription(), updateDate, updateBy);
