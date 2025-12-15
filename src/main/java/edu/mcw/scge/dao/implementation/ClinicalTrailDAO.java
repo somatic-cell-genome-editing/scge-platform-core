@@ -21,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -651,16 +653,28 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public void updateFieldChange(ClinicalTrialFieldChange change) throws Exception {
         String sql = """
             UPDATE clinical_trial_field_history
-            SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?
+            SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?
             WHERE nct_id=? AND field_name=?
             """;
         update(sql,
                 change.getOldValue(),
                 change.getNewValue(),
-                change.getUpdateDate(),
+                parseDate(change.getUpdateDate()),
                 change.getUpdateBy(),
                 change.getNctId(),
                 change.getFieldName());
+    }
+    private java.sql.Date parseDate(String date) {
+        if (date == null || date.isBlank()) {
+            return null;
+        }
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
+            LocalDate ld = LocalDate.parse(date, fmt);
+            return java.sql.Date.valueOf(ld);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid date format: " + date, e);
+        }
     }
     /**
      * Insert multiple field changes in batch
