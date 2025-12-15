@@ -180,6 +180,16 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
     }
    public void insertExternalLink(ClinicalTrialExternalLink link) throws Exception {
+        String today = java.time.LocalDate.now().toString();
+        String fieldName = "ext_link_" + link.getId();
+        String newValue = link.getType() + " | " + link.getName() + " | " + link.getLink();
+        ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, null, newValue, "curator");
+        change.setUpdateDate(today);
+        List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+        changes.add(change);
+        insertFieldChanges(changes);
+
+        // Perform the insert
         String sql="insert into clinical_trial_ext_links( " +
                 "link_name\n," +
                 "link_type\n," +
@@ -197,13 +207,53 @@ public class ClinicalTrailDAO extends AbstractDAO {
     }
 
     public void updateExternalLink(ClinicalTrialExternalLink link) throws Exception{
+        // Track changes before updating
+        ClinicalTrialExternalLink existingLink = getExternalLinkById(link.getId());
+        if (existingLink != null) {
+            String today = java.time.LocalDate.now().toString();
+            String fieldName = "ext_link_" + link.getId();
+            String oldValue = existingLink.getType() + " | " + existingLink.getName() + " | " + existingLink.getLink();
+            String newValue = link.getType() + " | " + link.getName() + " | " + link.getLink();
+
+            if (!oldValue.equals(newValue)) {
+                ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, oldValue, newValue, "curator");
+                change.setUpdateDate(today);
+                List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+                changes.add(change);
+                insertFieldChanges(changes);
+            }
+        }
+
+        // Perform the update
         String sql = "Update clinical_trial_ext_links set link_name=?,link_type=?,link=?,nctid=? where id=?";
         this.update(sql,link.getName(),link.getType(),link.getLink(),link.getNctId(),link.getId());
     }
     public void deleteExternalLink(int linkId) throws Exception{
+        // Track deletion before deleting (new_value = null)
+        ClinicalTrialExternalLink existingLink = getExternalLinkById(linkId);
+        if (existingLink != null) {
+            String today = java.time.LocalDate.now().toString();
+            String fieldName = "ext_link_" + linkId;
+            String oldValue = existingLink.getType() + " | " + existingLink.getName() + " | " + existingLink.getLink();
+            ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(existingLink.getNctId(), fieldName, oldValue, null, "curator");
+            change.setUpdateDate(today);
+            List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+            changes.add(change);
+            insertFieldChanges(changes);
+        }
+
+        // Perform the delete
         String sql = "Delete from clinical_trial_ext_links where id=?";
         this.update(sql,linkId);
     }
+
+    public ClinicalTrialExternalLink getExternalLinkById(int id) throws Exception {
+        String sql = "select * from clinical_trial_ext_links where id=?";
+        ClinicalTrialExternalLinksQuery query = new ClinicalTrialExternalLinksQuery(this.getDataSource(), sql);
+        List<ClinicalTrialExternalLink> links = execute(query, id);
+        return links.isEmpty() ? null : links.get(0);
+    }
+
     public boolean existsExternalLink(ClinicalTrialExternalLink link) throws Exception {
         String sql="select * from clinical_trial_ext_links where link_name=? and link_type=? and nctid=?";
         ClinicalTrialExternalLinksQuery query=new ClinicalTrialExternalLinksQuery(this.getDataSource(), sql);
