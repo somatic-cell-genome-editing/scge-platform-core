@@ -669,11 +669,17 @@ public class ClinicalTrailDAO extends AbstractDAO {
             return null;
         }
         try {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
-            LocalDate ld = LocalDate.parse(date, fmt);
+            // Try ISO format first (yyyy-MM-dd)
+            LocalDate ld = LocalDate.parse(date);
             return java.sql.Date.valueOf(ld);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid date format: " + date, e);
+        } catch (Exception e1) {
+            try {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
+                LocalDate ld = LocalDate.parse(date, fmt);
+                return java.sql.Date.valueOf(ld);
+            } catch (Exception e2) {
+                throw new IllegalArgumentException("Invalid date format: " + date, e2);
+            }
         }
     }
     /**
