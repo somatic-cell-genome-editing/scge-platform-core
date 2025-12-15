@@ -19,6 +19,7 @@ public class ClinicalTrialFieldChange {
     private Date changedAt;
     private String updateDate;
     private String updateBy;
+    private Integer extLinkId;
 
     public ClinicalTrialFieldChange() {}
 
@@ -94,6 +95,14 @@ public class ClinicalTrialFieldChange {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    public Integer getExtLinkId() {
+        return extLinkId;
+    }
+
+    public void setExtLinkId(Integer extLinkId) {
+        this.extLinkId = extLinkId;
     }
 
     @Override

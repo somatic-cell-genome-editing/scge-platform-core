@@ -24,6 +24,10 @@ public class ClinicalTrialFieldChangeQuery extends MappingSqlQuery<ClinicalTrial
         change.setChangedAt(rs.getTimestamp("changed_at"));
         change.setUpdateDate(rs.getString("update_date"));
         change.setUpdateBy(rs.getString("update_by"));
+        int extLinkId = rs.getInt("ext_link_id");
+        if (!rs.wasNull()) {
+            change.setExtLinkId(extLinkId);
+        }
         return change;
     }
 }

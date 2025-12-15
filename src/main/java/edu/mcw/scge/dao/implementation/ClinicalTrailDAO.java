@@ -183,10 +183,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
     }
    public void insertExternalLink(ClinicalTrialExternalLink link) throws Exception {
         String today = java.time.LocalDate.now().toString();
-        String fieldName = "ext_link_" + link.getId();
-        String newValue = link.getType() + " | " + link.getName() + " | " + link.getLink();
+        String fieldName = link.getType();
+        String newValue = "LinkName:" + link.getName() + ";LinkUrl:" + link.getLink();
         ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, null, newValue, "curator");
         change.setUpdateDate(today);
+        change.setExtLinkId(link.getId());
         List<ClinicalTrialFieldChange> changes = new ArrayList<>();
         changes.add(change);
         insertFieldChanges(changes);
@@ -213,13 +214,23 @@ public class ClinicalTrailDAO extends AbstractDAO {
         ClinicalTrialExternalLink existingLink = getExternalLinkById(link.getId());
         if (existingLink != null) {
             String today = java.time.LocalDate.now().toString();
-            String fieldName = "ext_link_" + link.getId();
-            String oldValue = existingLink.getType() + " | " + existingLink.getName() + " | " + existingLink.getLink();
-            String newValue = link.getType() + " | " + link.getName() + " | " + link.getLink();
+            String fieldName = link.getType();
+            String oldValue = "LinkName:" + existingLink.getName() + ";LinkUrl:" + existingLink.getLink();
+            String newValue = "LinkName:" + link.getName() + ";LinkUrl:" + link.getLink();
 
-            if (!oldValue.equals(newValue)) {
+            // Check if linkname/url and link type changed
+            boolean typeChanged = !existingLink.getType().equals(link.getType());
+            boolean valueChanged = !oldValue.equals(newValue);
+
+            if (typeChanged || valueChanged) {
+                // If type changed, include old type in old_value
+                if (typeChanged) {
+                    oldValue = "LinkType:" + existingLink.getType() + ";" + oldValue;
+                    newValue = "LinkType:" + link.getType() + ";" + newValue;
+                }
                 ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, oldValue, newValue, "curator");
                 change.setUpdateDate(today);
+                change.setExtLinkId(link.getId());
                 List<ClinicalTrialFieldChange> changes = new ArrayList<>();
                 changes.add(change);
                 insertFieldChanges(changes);
@@ -235,10 +246,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
         ClinicalTrialExternalLink existingLink = getExternalLinkById(linkId);
         if (existingLink != null) {
             String today = java.time.LocalDate.now().toString();
-            String fieldName = "ext_link_" + linkId;
-            String oldValue = existingLink.getType() + " | " + existingLink.getName() + " | " + existingLink.getLink();
+            String fieldName = existingLink.getType();
+            String oldValue = "LinkName:" + existingLink.getName() + ";LinkUrl:" + existingLink.getLink();
             ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(existingLink.getNctId(), fieldName, oldValue, null, "curator");
             change.setUpdateDate(today);
+            change.setExtLinkId(linkId);
             List<ClinicalTrialFieldChange> changes = new ArrayList<>();
             changes.add(change);
             insertFieldChanges(changes);
@@ -509,10 +521,17 @@ public class ClinicalTrailDAO extends AbstractDAO {
         }
     }
     public List<ClinicalTrialFieldChange> getClinicalTrialFieldChangeRecord(ClinicalTrialFieldChange fieldRecord) throws Exception {
-        String sql="select * from clinical_trial_field_history where nct_id=? and field_name=?";
-        ClinicalTrialFieldChangeQuery query=new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
-        return execute(query, fieldRecord.getNctId(), fieldRecord.getFieldName());
-
+        if (fieldRecord.getExtLinkId() != null) {
+            // For ext_link changes, check by ext_link_id
+            String sql = "select * from clinical_trial_field_history where nct_id=? and ext_link_id=?";
+            ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+            return execute(query, fieldRecord.getNctId(), fieldRecord.getExtLinkId());
+        } else {
+            // For regular field changes, check by field_name
+            String sql = "select * from clinical_trial_field_history where nct_id=? and field_name=?";
+            ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+            return execute(query, fieldRecord.getNctId(), fieldRecord.getFieldName());
+        }
     }
 
     public void downloadClinicalTrails(List<String> nctIds) throws Exception {
@@ -635,8 +654,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public void insertFieldChange(ClinicalTrialFieldChange change) throws Exception {
         String sql = """
             INSERT INTO clinical_trial_field_history
-            (nct_id, field_name, old_value, new_value, changed_at, update_date, update_by)
-            VALUES (?, ?, ?, ?, NOW(), CAST(NULLIF(?, '') AS DATE), ?)
+            (nct_id, field_name, old_value, new_value, changed_at, update_date, update_by, ext_link_id)
+            VALUES (?, ?, ?, ?, NOW(), CAST(NULLIF(?, '') AS DATE), ?, ?)
             """;
         update(sql,
             change.getNctId(),
@@ -644,25 +663,44 @@ public class ClinicalTrailDAO extends AbstractDAO {
             change.getOldValue(),
             change.getNewValue(),
             change.getUpdateDate(),
-            change.getUpdateBy()
+            change.getUpdateBy(),
+            change.getExtLinkId()
         );
     }
     /**
      * update a single field change record into the history table
      */
     public void updateFieldChange(ClinicalTrialFieldChange change) throws Exception {
-        String sql = """
-            UPDATE clinical_trial_field_history
-            SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?
-            WHERE nct_id=? AND field_name=?
-            """;
-        update(sql,
-                change.getOldValue(),
-                change.getNewValue(),
-                parseDate(change.getUpdateDate()),
-                change.getUpdateBy(),
-                change.getNctId(),
-                change.getFieldName());
+        if (change.getExtLinkId() != null) {
+            // For ext_link changes, match on ext_link_id
+            String sql = """
+                UPDATE clinical_trial_field_history
+                SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?, field_name=?
+                WHERE nct_id=? AND ext_link_id=?
+                """;
+            update(sql,
+                    change.getOldValue(),
+                    change.getNewValue(),
+                    parseDate(change.getUpdateDate()),
+                    change.getUpdateBy(),
+                    change.getFieldName(),
+                    change.getNctId(),
+                    change.getExtLinkId());
+        } else {
+            // For regular field changes, match on field_name
+            String sql = """
+                UPDATE clinical_trial_field_history
+                SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?
+                WHERE nct_id=? AND field_name=?
+                """;
+            update(sql,
+                    change.getOldValue(),
+                    change.getNewValue(),
+                    parseDate(change.getUpdateDate()),
+                    change.getUpdateBy(),
+                    change.getNctId(),
+                    change.getFieldName());
+        }
     }
     private java.sql.Date parseDate(String date) {
         if (date == null || date.isBlank()) {
