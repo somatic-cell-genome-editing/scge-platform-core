@@ -187,7 +187,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
         String today = java.time.LocalDate.now().toString();
         String fieldName = link.getType();
         String newValue = "LinkName:" + link.getName() + ";LinkUrl:" + link.getLink();
-        ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, null, newValue, "curator");
+        ClinicalTrialFieldChange change = new ClinicalTrialFieldChange();
+        change.setNctId(link.getNctId());
+        change.setFieldName(fieldName);
+        change.setOldValue(null);
+        change.setNewValue(newValue);
+        change.setUpdateBy("curator");
         change.setUpdateDate(today);
         change.setExtLinkId(link.getId());
         List<ClinicalTrialFieldChange> changes = new ArrayList<>();
@@ -230,7 +235,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
                     oldValue = "LinkType:" + existingLink.getType() + ";" + oldValue;
                     newValue = "LinkType:" + link.getType() + ";" + newValue;
                 }
-                ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(link.getNctId(), fieldName, oldValue, newValue, "curator");
+                ClinicalTrialFieldChange change = new ClinicalTrialFieldChange();
+                change.setNctId(link.getNctId());
+                change.setFieldName(fieldName);
+                change.setOldValue(oldValue);
+                change.setNewValue(newValue);
+                change.setUpdateBy("curator");
                 change.setUpdateDate(today);
                 change.setExtLinkId(link.getId());
                 List<ClinicalTrialFieldChange> changes = new ArrayList<>();
@@ -250,7 +260,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
             String today = java.time.LocalDate.now().toString();
             String fieldName = existingLink.getType();
             String oldValue = "LinkName:" + existingLink.getName() + ";LinkUrl:" + existingLink.getLink();
-            ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(existingLink.getNctId(), fieldName, oldValue, null, "curator");
+            ClinicalTrialFieldChange change = new ClinicalTrialFieldChange();
+            change.setNctId(existingLink.getNctId());
+            change.setFieldName(fieldName);
+            change.setOldValue(oldValue);
+            change.setNewValue(null);
+            change.setUpdateBy("curator");
             change.setUpdateDate(today);
             change.setExtLinkId(linkId);
             List<ClinicalTrialFieldChange> changes = new ArrayList<>();
