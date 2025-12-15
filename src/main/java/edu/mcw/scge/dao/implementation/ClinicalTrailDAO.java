@@ -677,7 +677,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
             // For ext_link changes, match on ext_link_id
             String sql = """
                 UPDATE clinical_trial_field_history
-                SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?, field_name=?
+                SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?, field_name=?
                 WHERE nct_id=? AND ext_link_id=?
                 """;
             update(sql,
@@ -692,7 +692,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
             // For regular field changes, match on field_name
             String sql = """
                 UPDATE clinical_trial_field_history
-                SET old_value=?, new_value=?, changed_at=NOW(), update_date=?, update_by=?
+                SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?
                 WHERE nct_id=? AND field_name=?
                 """;
             update(sql,
