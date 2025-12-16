@@ -309,11 +309,6 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return query.execute();
     }
 
-    public List<ClinicalTrialRecord> getClinicalTrailRecordByNctId(String nctId) throws Exception {
-        String sql="select * from clinical_trial_record where nctid=?";
-        ClinicalTrialQuery query=new ClinicalTrialQuery(this.getDataSource(), sql);
-        return execute(query, nctId);
-    }
     public List<ClinicalTrialRecord> getTodayModifiedRecords() throws Exception {
         String sql= """
                 SELECT *
@@ -357,8 +352,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return restTemplate.getForObject(fetchUri, String.class);
     }
     public boolean existsRecord(String nctId) throws Exception {
-        List<ClinicalTrialRecord> records= getClinicalTrailRecordByNctId(nctId);
-        return records.size() > 0;
+        ClinicalTrialRecord records= getSingleClinicalTrailRecordByNctId(nctId);
+        return records!=null;
     }
 
     public String downloadClinicalTrailByNctId(String nctId) {
@@ -724,8 +719,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
      */
     public void insertFieldChanges(List<ClinicalTrialFieldChange> changes) throws Exception {
         for (ClinicalTrialFieldChange change : changes) {
-            List<ClinicalTrialFieldChange> changeRecords=getClinicalTrialFieldChangeRecord(change);
-            if(changeRecords.size()>0) {
+            List<ClinicalTrialFieldChange> fieldChangeRecords=getClinicalTrialFieldChangeRecord(change);
+            if(fieldChangeRecords.size()>0) {
                updateFieldChange(change);
             }else{
                 insertFieldChange(change);
@@ -856,7 +851,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public List<ClinicalTrialFieldChange> compareRecordsAPIFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
         List<ClinicalTrialFieldChange> changes = new ArrayList<>();
         String nctId = newRecord.getNctId();
-        String updateDate = String.valueOf(newRecord.getRecordModifiedDate());
+        LocalDate localDate = LocalDate.now();
+
+        // Convert the LocalDate to a java.sql.Date
+        java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+        String updateDate = sqlDate.toString();
 
         // Compare each tracked field
         compareField(changes, nctId, "description", existing.getDescription(), newRecord.getDescription(), updateDate, updateBy);
@@ -918,10 +917,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
      * Update API fields with change tracking - enhanced version
      */
     public String updateAPIFieldsWithTracking(ClinicalTrialRecord record, String updateBy) throws Exception {
-        List<ClinicalTrialRecord> records = getClinicalTrailRecordByNctId(record.getNctId());
-        if (records.size() > 0) {
-            ClinicalTrialRecord existingRecord = records.get(0);
-
+        ClinicalTrialRecord existingRecord = getSingleClinicalTrailRecordByNctId(record.getNctId());
+        if (existingRecord!=null) {
             // Compare and get changes
             List<ClinicalTrialFieldChange> changes = compareRecordsAPIFields(existingRecord, record, updateBy);
 
