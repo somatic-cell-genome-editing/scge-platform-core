@@ -793,31 +793,31 @@ public class ClinicalTrailDAO extends AbstractDAO {
         String today = sqlDate.toString();
 
         // Fields from updateCuratedDataFields()
-        compareField(changes, nctId, "target_gene", existing.getTargetGeneOrVariant(), newRecord.getTargetGeneOrVariant(), today, updateBy);
-        compareField(changes, nctId, "therapy_type", existing.getTherapyType(), newRecord.getTherapyType(), today, updateBy);
-        compareField(changes, nctId, "therapy_route", existing.getTherapyRoute(), newRecord.getTherapyRoute(), today, updateBy);
-        compareField(changes, nctId, "mechanism_of_action", existing.getMechanismOfAction(), newRecord.getMechanismOfAction(), today, updateBy);
-        compareField(changes, nctId, "route_of_administration", existing.getRouteOfAdministration(), newRecord.getRouteOfAdministration(), today, updateBy);
-        compareField(changes, nctId, "drug_product_type", existing.getDrugProductType(), newRecord.getDrugProductType(), today, updateBy);
-        compareField(changes, nctId, "target_tissue", existing.getTargetTissueOrCell(), newRecord.getTargetTissueOrCell(), today, updateBy);
-        compareField(changes, nctId, "delivery_system", existing.getDeliverySystem(), newRecord.getDeliverySystem(), today, updateBy);
-        compareField(changes, nctId, "vector_type", existing.getVectorType(), newRecord.getVectorType(), today, updateBy);
-        compareField(changes, nctId, "editor_type", existing.getEditorType(), newRecord.getEditorType(), today, updateBy);
-        compareField(changes, nctId, "dose_1", existing.getDose1(), newRecord.getDose1(), today, updateBy);
-        compareField(changes, nctId, "dose_2", existing.getDose2(), newRecord.getDose2(), today, updateBy);
-        compareField(changes, nctId, "dose_3", existing.getDose3(), newRecord.getDose3(), today, updateBy);
-        compareField(changes, nctId, "dose_4", existing.getDose4(), newRecord.getDose4(), today, updateBy);
-        compareField(changes, nctId, "dose_5", existing.getDose5(), newRecord.getDose5(), today, updateBy);
-        compareField(changes, nctId, "recent_updates", existing.getRecentUpdates(), newRecord.getRecentUpdates(), today, updateBy);
-        //compareField(changes, nctId, "patents", existing.getPatents(), newRecord.getPatents(), today, updateBy);
-        compareField(changes, nctId, "compound_name", existing.getCompoundName(), newRecord.getCompoundName(), today, updateBy);
-        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), today, updateBy);
-        compareField(changes, nctId, "record_status", existing.getRecordStatus(), newRecord.getRecordStatus(), today, updateBy);
+        compareField(changes, nctId, "target_gene", existing.getTargetGeneOrVariant(), newRecord.getTargetGeneOrVariant(), today, updateBy, false);
+        compareField(changes, nctId, "therapy_type", existing.getTherapyType(), newRecord.getTherapyType(), today, updateBy, false);
+        compareField(changes, nctId, "therapy_route", existing.getTherapyRoute(), newRecord.getTherapyRoute(), today, updateBy, false);
+        compareField(changes, nctId, "mechanism_of_action", existing.getMechanismOfAction(), newRecord.getMechanismOfAction(), today, updateBy, false);
+        compareField(changes, nctId, "route_of_administration", existing.getRouteOfAdministration(), newRecord.getRouteOfAdministration(), today, updateBy, false);
+        compareField(changes, nctId, "drug_product_type", existing.getDrugProductType(), newRecord.getDrugProductType(), today, updateBy, false);
+        compareField(changes, nctId, "target_tissue", existing.getTargetTissueOrCell(), newRecord.getTargetTissueOrCell(), today, updateBy, false);
+        compareField(changes, nctId, "delivery_system", existing.getDeliverySystem(), newRecord.getDeliverySystem(), today, updateBy, false);
+        compareField(changes, nctId, "vector_type", existing.getVectorType(), newRecord.getVectorType(), today, updateBy, false);
+        compareField(changes, nctId, "editor_type", existing.getEditorType(), newRecord.getEditorType(), today, updateBy, false);
+        compareField(changes, nctId, "dose_1", existing.getDose1(), newRecord.getDose1(), today, updateBy, false);
+        compareField(changes, nctId, "dose_2", existing.getDose2(), newRecord.getDose2(), today, updateBy, false);
+        compareField(changes, nctId, "dose_3", existing.getDose3(), newRecord.getDose3(), today, updateBy, false);
+        compareField(changes, nctId, "dose_4", existing.getDose4(), newRecord.getDose4(), today, updateBy, false);
+        compareField(changes, nctId, "dose_5", existing.getDose5(), newRecord.getDose5(), today, updateBy, false);
+        compareField(changes, nctId, "recent_updates", existing.getRecentUpdates(), newRecord.getRecentUpdates(), today, updateBy, false);
+        //compareField(changes, nctId, "patents", existing.getPatents(), newRecord.getPatents(), today, updateBy, false);
+        compareField(changes, nctId, "compound_name", existing.getCompoundName(), newRecord.getCompoundName(), today, updateBy, false);
+        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), today, updateBy, false);
+        compareField(changes, nctId, "record_status", existing.getRecordStatus(), newRecord.getRecordStatus(), today, updateBy, false);
 
         // Fields from updateSomeNewFieldsDataFields()
-        compareField(changes, nctId, "development_status", existing.getDevelopmentStatus(), newRecord.getDevelopmentStatus(), today, updateBy);
-        compareField(changes, nctId, "indication_doid", existing.getIndicationDOID(), newRecord.getIndicationDOID(), today, updateBy);
-        compareField(changes, nctId, "compound_description", existing.getCompoundDescription(), newRecord.getCompoundDescription(), today, updateBy);
+        compareField(changes, nctId, "development_status", existing.getDevelopmentStatus(), newRecord.getDevelopmentStatus(), today, updateBy, false);
+        compareField(changes, nctId, "indication_doid", existing.getIndicationDOID(), newRecord.getIndicationDOID(), today, updateBy, false);
+        compareField(changes, nctId, "compound_description", existing.getCompoundDescription(), newRecord.getCompoundDescription(), today, updateBy, false);
 
         return changes;
     }
@@ -832,15 +832,15 @@ public class ClinicalTrailDAO extends AbstractDAO {
 
         String oldValue = existing != null ? existing.getAlias() : null;
         String newValue = newAlias != null ? newAlias.getAlias() : null;
-        compareField(changes, nctId, "alias_value", oldValue, newValue, today, updateBy);
+        compareField(changes, nctId, "alias_value", oldValue, newValue, today, updateBy, false);
 
         oldValue = existing != null ? existing.getAliasTypeLC() : null;
         newValue = newAlias != null ? newAlias.getAliasTypeLC() : null;
-        compareField(changes, nctId, "alias_type", oldValue, newValue, today, updateBy);
+        compareField(changes, nctId, "alias_type", oldValue, newValue, today, updateBy, false);
 
         oldValue = existing != null ? existing.getNotes() : null;
         newValue = newAlias != null ? newAlias.getNotes() : null;
-        compareField(changes, nctId, "alias_notes", oldValue, newValue, today, updateBy);
+        compareField(changes, nctId, "alias_notes", oldValue, newValue, today, updateBy, false);
 
         return changes;
     }
@@ -891,14 +891,31 @@ public class ClinicalTrailDAO extends AbstractDAO {
      */
     private void compareField(List<ClinicalTrialFieldChange> changes, String nctId, String fieldName,
                               String oldValue, String newValue, String updateDate, String updateBy) {
+        compareField(changes, nctId, fieldName, oldValue, newValue, updateDate, updateBy, true);
+    }
+
+    /**
+     * manual curated fields don't need formatting. so overloaded this. Please do not remove this.
+     */
+    private void compareField(List<ClinicalTrialFieldChange> changes, String nctId, String fieldName,
+                              String oldValue, String newValue, String updateDate, String updateBy, boolean formatValues) {
         // Normalize null and empty strings for comparison
         String normalizedOld = normalizeValue(oldValue);
         String normalizedNew = normalizeValue(newValue);
 
         if (!Objects.equals(normalizedOld, normalizedNew)) {
-            ClinicalTrialFieldChange change = new ClinicalTrialFieldChange(nctId, fieldName, oldValue, newValue, updateBy);
+            ClinicalTrialFieldChange change;
+            if (formatValues) {
+                change = new ClinicalTrialFieldChange(nctId, fieldName, oldValue, newValue, updateBy);
+            } else {
+                change = new ClinicalTrialFieldChange();
+                change.setNctId(nctId);
+                change.setFieldName(fieldName);
+                change.setOldValue(oldValue);
+                change.setNewValue(newValue);
+                change.setUpdateBy(updateBy);
+            }
             change.setUpdateDate(updateDate);
-            change.setUpdateBy(updateBy);
             changes.add(change);
         }
     }
