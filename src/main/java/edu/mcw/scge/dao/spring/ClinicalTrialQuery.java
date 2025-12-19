@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -75,6 +76,8 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
         try{
             record.setRecordModifiedDate(rs.getDate("record_modified_date"));
         }catch (Exception ignored){}
+        Date recordCreationDate=rs.getDate("record_creation_date");
+        if(!rs.wasNull()) record .setRecordCreationDate(recordCreationDate);
             return record.formatRecordValue(record);
     }
 

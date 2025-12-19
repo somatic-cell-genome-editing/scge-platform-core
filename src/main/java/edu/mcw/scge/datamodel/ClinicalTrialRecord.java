@@ -67,6 +67,15 @@ public class ClinicalTrialRecord {
     private String recordStatus;
 
     private Date recordModifiedDate;
+    private Date recordCreationDate;
+
+    public Date getRecordCreationDate() {
+        return recordCreationDate;
+    }
+
+    public void setRecordCreationDate(Date recordCreationDate) {
+        this.recordCreationDate = recordCreationDate;
+    }
 
     public Date getRecordModifiedDate() {
         return recordModifiedDate;
