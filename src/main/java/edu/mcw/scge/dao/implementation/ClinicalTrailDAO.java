@@ -23,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -411,7 +410,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
             record.setSponsorClass(study.getProtocolSection().getSponsorCollaboratorsModule().getLeadSponsor().getClass_());
         }catch (Exception ignored){}
         try {
-            record.setIndication(String.join(", ", study.getProtocolSection().getConditionsModule().getConditions()));
+            List<String> indication= study.getProtocolSection().getConditionsModule().getConditions().stream().map(i -> i.replaceAll(",", " - ")).toList();
+            record.setIndication(String.join(", ", indication));
         }catch (Exception ignored){}
         try {
             ArrayList<String> conditionKeywords = (ArrayList) study.getProtocolSection().getConditionsModule().getAdditionalProperties().get("keywords");
