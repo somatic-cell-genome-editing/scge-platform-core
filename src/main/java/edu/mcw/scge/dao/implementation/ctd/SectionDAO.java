@@ -11,15 +11,33 @@ import java.util.List;
 public class SectionDAO extends AbstractDAO {
 
     public void insert(Section section) throws Exception {
-        String sql="insert into ctd_sections(section_id," +
+        String sql="insert into ctd_sections(" +
+                "section_id," +
                 "section_code," +
                 "section_name," +
                 "parent_id," +
                 "module," +
-                "level)" +
-                " values(?,?,?,?,?,?)";
+                "level, " +
+                "   required_initial_ind," +
+                "   submission_timing," +
+                "   required_for_marketing_application," +
+                "   notes," +
+                "   description " +
+                ")" +
+                " values(?,?,?,?,?,?,?,?,?,?,?)";
         update(sql,
-                section.getSectionId(), section.getSectionCode(), section.getSectionName(), section.getParentId(), section.getModuleCode(),section.getLevel()
+                section.getSectionId(),
+                section.getSectionCode(),
+                section.getSectionName(),
+                section.getParentId(),
+                section.getModuleCode(),
+                section.getLevel(),
+                section.getRequiredForInitialIND(),
+                section.getSubmissionTiming(),
+                section.getRequiredForMarketingApplicationOnly(),
+                section.getNotes(),
+                section.getSectionDescription()
+
         );
 
     }
@@ -28,18 +46,24 @@ public class SectionDAO extends AbstractDAO {
                 "   required_initial_ind=?," +
                 "   submission_timing=?," +
                 "   required_for_marketing_application=?," +
-                "   path_to_file=?," +
-                "   template_link_text=?," +
-                "   example_link_text=?," +
-                "   submission_format=?," +
+//                "   path_to_file=?," +
+//                "   template_link_text=?," +
+//                "   example_link_text=?," +
+//                "   submission_format=?," +
                 "   notes=?," +
-                "   description=?," +
-                "   resources=?" +
+                "   description=? " +
+//                "   resources=?" +
                 "   where section_code=?";
         update(sql,
-                section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),section.getPathToFile(),
-                section.getTemplateLinkText(), section.getExampleLinkText(),section.getSubmissionFormat(),
-                section.getNotes(), section.getSectionDescription(), section.getResources(), section.getSectionCode()
+                section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),
+//                section.getPathToFile(),
+//                section.getTemplateLinkText(),
+//                section.getExampleLinkText(),
+//                section.getSubmissionFormat(),
+                section.getNotes(),
+                section.getSectionDescription(),
+//                section.getResources(),
+                section.getSectionCode()
         );
 
     }
@@ -80,6 +104,12 @@ public class SectionDAO extends AbstractDAO {
 //        SectionQuery query=new SectionQuery(this.getDataSource(), sql);
 //        return execute(query, moduleCode, 4);
 //    }
+    public boolean existsSection(Section section) throws Exception {
+        String sql="select * from ctd_sections where section_code=?";
+        SectionQuery sectionQuery=new SectionQuery(this.getDataSource(), sql);
+        List<Section> sections=execute(sectionQuery, section.getSectionCode());
+        return sections.size() > 0;
+    }
 public List<Section> getSectionsOfModuleByLevel(int moduleCode, int level) throws Exception {
     String sql="select * from ctd_sections where module=? and level=? order by section_code";
     SectionQuery query=new SectionQuery(this.getDataSource(), sql);
