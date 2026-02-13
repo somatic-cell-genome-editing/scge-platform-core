@@ -43,6 +43,7 @@ public class SectionDAO extends AbstractDAO {
     }
     public void update(Section section) throws Exception {
         String sql="update  ctd_sections set " +
+                "   section_name=?,"+
                 "   required_initial_ind=?," +
                 "   submission_timing=?," +
                 "   required_for_marketing_application=?," +
@@ -55,7 +56,7 @@ public class SectionDAO extends AbstractDAO {
 //                "   resources=?" +
                 "   where section_code=?";
         update(sql,
-                section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),
+              section.getSectionName(),  section.getRequiredForInitialIND(), section.getSubmissionTiming(), section.getRequiredForMarketingApplicationOnly(),
 //                section.getPathToFile(),
 //                section.getTemplateLinkText(),
 //                section.getExampleLinkText(),
