@@ -31,6 +31,11 @@ public class CTDResourceDAO extends AbstractDAO {
         CTDResourceQuery query=new CTDResourceQuery(this.getDataSource(), sql);
         return execute(query, sectionCode);
     }
+    public List<CTDResource> getAllResources() throws Exception {
+        String sql = "SELECT * FROM ctd_resources ORDER BY ctd_section, type, resource_name";
+        CTDResourceQuery query = new CTDResourceQuery(this.getDataSource(), sql);
+        return execute(query);
+    }
     public List<CTDResource> getCTDResource(CTDResource resource) throws Exception {
         String sql="select * from ctd_resources where ctd_section=?" +
                 "   and resource_name=? " +
