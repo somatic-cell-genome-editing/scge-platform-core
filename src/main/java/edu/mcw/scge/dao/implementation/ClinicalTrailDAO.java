@@ -182,6 +182,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
         this.update(sql, record.getDevelopmentStatus(),
                 record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
     }
+    public void updateRecordStatus(ClinicalTrialRecord record) throws Exception {
+        String sql = "update clinical_trial_record " +
+                "set record_status=?," +
+               "record_modified_date=NOW() where nctid=? ";
+        this.update(sql, record.getRecordStatus(), record.getNctId().trim());
+    }
    public void insertExternalLink(ClinicalTrialExternalLink link) throws Exception {
         String today = java.time.LocalDate.now().toString();
         String fieldName = link.getType();
