@@ -36,6 +36,7 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
         record.setElibilityMaxAge(rs.getString("eligibity_max_age"));
 
         record.setStandardAge(rs.getString("eligibility_std_age"));
+        record.setEligibilityCriteria(rs.getString("eligibility_criteria"));
         record.setIsFDARegulated(rs.getString("is_fda_regulated"));
        record.setBriefTitle(rs.getString("brief_title"));
        record.setOfficialTitle(rs.getString("official_title"));

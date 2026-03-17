@@ -58,6 +58,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "locations," +
                 "number_of_locations," +
                 "eligibility_sex," +
+                "eligibility_criteria, "+
                 "eligibility_min_age," +
                 "eligibity_max_age," +
                 "eligibility_std_age," +
@@ -95,7 +96,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 "compound_description, " +
                 "with_has_results, " +
                 "record_status)"+
-                "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
+                "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +
                 "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," + "?," +"?," +
                 "NOW()," + "NOW()," +
@@ -113,6 +114,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
                 record.getLocation(),
                 record.getNumberOfLocations(),
                 record.getEligibilitySex(),
+                record.getEligibilityCriteria(),
                 record.getElibilityMinAge(),
                 record.getElibilityMaxAge(),
                 record.getStandardAge(),
@@ -172,8 +174,8 @@ public class ClinicalTrailDAO extends AbstractDAO {
 
 
     public void updateAPIDataFields(ClinicalTrialRecord record) throws Exception {
-        String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,phases=?,enrollment_count=?,enrollment_type=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=?, record_modified_date=NOW(), with_has_results=? where nctid=?";
-        this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(),  record.getPhase(), record.getEnrorllmentCount(),record.getEnrollmentType(), record.getLocation(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAge(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStudyStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(), record.getWithHasResults(),record.getNctId().trim());
+        String sql = "update clinical_trial_record set description=?,intervention_name=?,intervention_description=?,sponsor=?,sponsor_class=?,phases=?,enrollment_count=?,enrollment_type=?,locations=?,number_of_locations=?,eligibility_sex=?,eligibility_criteria=?,eligibility_min_age=?,eligibity_max_age=?,eligibility_std_age=?,is_fda_regulated=?,brief_title=?,official_title=?,nih_report_link=?,overall_status=?,first_submit_date=?,estimated_completion_date=?,last_update_post_date=?,browse_condition_terms=?, record_modified_date=NOW(), with_has_results=? where nctid=?";
+        this.update(sql, record.getDescription(), record.getInterventionName(), record.getInterventionDescription(), record.getSponsor(), record.getSponsorClass(),  record.getPhase(), record.getEnrorllmentCount(),record.getEnrollmentType(), record.getLocation(), record.getNumberOfLocations(), record.getEligibilitySex(), record.getEligibilityCriteria(), record.getElibilityMinAge(), record.getElibilityMaxAge(), record.getStandardAge(), record.getIsFDARegulated(), record.getBriefTitle(), record.getOfficialTitle(), record.getNihReportLink(), record.getStudyStatus(), record.getFirstSubmitDate(), record.getEstimatedCompleteDate(), record.getLastUpdatePostDate(), record.getBrowseConditionTerms(), record.getWithHasResults(),record.getNctId().trim());
     }
     public void updateSomeNewFieldsDataFields(ClinicalTrialRecord record) throws Exception {
         String sql = "update clinical_trial_record " +
@@ -443,6 +445,15 @@ public class ClinicalTrailDAO extends AbstractDAO {
         try {
             record.setEligibilitySex(study.getProtocolSection().getEligibilityModule().getSex());
         }catch (Exception ignored){}
+
+        try {
+            String criteria = study.getProtocolSection().getEligibilityModule().getEligibilityCriteria();
+//            System.out.println("ELIGIBILITY CRITERIA for " + record.getNctId() + ": " + (criteria != null ? criteria.substring(0, Math.min(50, criteria.length())) + "..." : "NULL"));
+            record.setEligibilityCriteria(criteria);
+        }catch (Exception exception){
+//            System.err.println("ELIGIBILITY CRITERIA ERROR for " + record.getNctId());
+            exception.printStackTrace();
+        }
         try {
             record.setElibilityMinAge(study.getProtocolSection().getEligibilityModule().getMinimumAge());
         }catch (Exception ignored){}
@@ -875,6 +886,9 @@ public class ClinicalTrailDAO extends AbstractDAO {
         compareField(changes, nctId, "locations", existing.getLocation(), newRecord.getLocation(), updateDate, updateBy);
         compareField(changes, nctId, "number_of_locations", String.valueOf(existing.getNumberOfLocations()), String.valueOf(newRecord.getNumberOfLocations()), updateDate, updateBy);
         compareField(changes, nctId, "eligibility_sex", existing.getEligibilitySex(), newRecord.getEligibilitySex(), updateDate, updateBy);
+
+        compareField(changes, nctId, "eligibility_criteria", existing.getEligibilityCriteria(), newRecord.getEligibilityCriteria(), updateDate, updateBy);
+
         compareField(changes, nctId, "eligibility_min_age", existing.getElibilityMinAge(), newRecord.getElibilityMinAge(), updateDate, updateBy);
         compareField(changes, nctId, "eligibility_max_age", existing.getElibilityMaxAge(), newRecord.getElibilityMaxAge(), updateDate, updateBy);
         compareField(changes, nctId, "eligibility_std_age", existing.getStandardAge(), newRecord.getStandardAge(), updateDate, updateBy);

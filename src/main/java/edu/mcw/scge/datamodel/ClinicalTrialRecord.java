@@ -68,6 +68,15 @@ public class ClinicalTrialRecord {
 
     private Date recordModifiedDate;
     private Date recordCreationDate;
+    private String eligibilityCriteria;
+
+    public String getEligibilityCriteria() {
+        return eligibilityCriteria;
+    }
+
+    public void setEligibilityCriteria(String eligibilityCriteria) {
+        this.eligibilityCriteria = eligibilityCriteria;
+    }
 
     public Date getRecordCreationDate() {
         return recordCreationDate;
