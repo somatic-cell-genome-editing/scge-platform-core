@@ -372,7 +372,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
             String responseStr = this.getResponseStr(fetchUri);
             if (responseStr != null) {
                 JSONObject jsonObject = new JSONObject(responseStr);
-               return insertClinicalTrialAPIObject(jsonObject.toString(), nctId, "curator");
+               return insertClinicalTrialAPIObject(jsonObject.toString(), nctId, "api");
             }
             return "error_no_response";
         }
