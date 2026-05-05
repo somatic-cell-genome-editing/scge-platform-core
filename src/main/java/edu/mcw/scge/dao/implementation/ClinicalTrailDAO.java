@@ -669,6 +669,11 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return StringListQuery.execute(this,sql);
     }
 
+    public List<String> getNctIdsByRecordStatus(String recordStatus) throws Exception {
+        String sql = "select nctid from clinical_trial_record where record_status = ?";
+        return StringListQuery.execute(this, sql, recordStatus);
+    }
+
     // ==========================================
     // FIELD CHANGE TRACKING METHODS
     // ==========================================
