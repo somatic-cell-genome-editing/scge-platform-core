@@ -5,11 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import edu.mcw.scge.dao.AbstractDAO;
 import edu.mcw.scge.dao.spring.*;
-import edu.mcw.scge.datamodel.Alias;
-import edu.mcw.scge.datamodel.ClinicalTrialAdditionalInfo;
-import edu.mcw.scge.datamodel.ClinicalTrialExternalLink;
-import edu.mcw.scge.datamodel.ClinicalTrialFieldChange;
-import edu.mcw.scge.datamodel.ClinicalTrialRecord;
+import edu.mcw.scge.datamodel.*;
 
 import edu.mcw.scge.datamodel.clinicalTrialModel.Intervention;
 import edu.mcw.scge.datamodel.clinicalTrialModel.Location;
@@ -1015,4 +1011,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return update(sql);
     }
 
+    public List<ClinicalTrialFieldOption> getFieldOptions(String fieldName) throws Exception {
+
+        String sql= """
+               SELECT value, definition FROM clinical_trial_field_option WHERE field_name=? AND is_active=true ORDER BY display_order, value
+                """;
+        ClinicalTrialFieldOptionQuery query=new ClinicalTrialFieldOptionQuery(this.getDataSource(), sql);
+        return execute(query,fieldName);
+    }
 }
