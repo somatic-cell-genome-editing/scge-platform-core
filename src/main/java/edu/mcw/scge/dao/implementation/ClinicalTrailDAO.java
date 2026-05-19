@@ -1020,4 +1020,12 @@ public class ClinicalTrailDAO extends AbstractDAO {
         return update(sql);
     }
 
+    public List<ClinicalTrialFieldOption> getFieldOptions(String fieldName) throws Exception {
+
+        String sql= """
+               SELECT * FROM clinical_trial_field_option WHERE field_name=? AND is_active=true ORDER BY display_order, value
+                """;
+        ClinicalTrialFieldOptionQuery query=new ClinicalTrialFieldOptionQuery(this.getDataSource(), sql);
+        return execute(query,fieldName);
+    }
 }
