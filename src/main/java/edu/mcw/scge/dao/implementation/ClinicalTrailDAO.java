@@ -455,4 +455,442 @@ public class ClinicalTrailDAO extends AbstractDAO {
 //        }
 //    }
 
+    public void updateAlias(Alias alias) throws Exception {
+        // Track changes before updating
+        Alias existingAlias = getAliasByKey(alias.getKey());
+        if (existingAlias != null) {
+            List<ClinicalTrialFieldChange> changes = compareAliasFields(existingAlias, alias, "curator");
+            if (!changes.isEmpty()) {
+                insertFieldChanges(changes);
+            }
+        }
+
+        // Perform the update
+        String sql = "update alias set " +
+                "identifier=?, " +
+                "notes=?, " +
+                "alias_type_lc=?, " +
+                "alias=?, " +
+                "field_name=? " +
+                "where key=?";
+
+        update(sql,
+                alias.getIdentifier(),
+                alias.getNotes(),
+                alias.getAliasTypeLC(),
+                alias.getAlias(),
+                alias.getFieldName(),
+                alias.getKey());
+    }
+
+    public List<Alias> getAliases(String identifier, String fieldName) throws Exception {
+        String sql="select * from alias where identifier=? and field_name=?";
+        AliasQuery query=new AliasQuery(this.getDataSource(), sql);
+        return execute(query, identifier, fieldName.toLowerCase());
+    }
+
+    public Alias getAliasByKey(int key) throws Exception {
+        String sql = "select * from alias where key=?";
+        AliasQuery query = new AliasQuery(this.getDataSource(), sql);
+        List<Alias> aliases = execute(query, key);
+        return aliases.isEmpty() ? null : aliases.get(0);
+    }
+
+    public void deleteAlias(int key) throws Exception{
+        // Track deletion before deleting (new_value = null)
+        Alias existingAlias = getAliasByKey(key);
+        if (existingAlias != null) {
+            List<ClinicalTrialFieldChange> changes = compareAliasFields(existingAlias, null, "curator");
+            if (!changes.isEmpty()) {
+                insertFieldChanges(changes);
+            }
+        }
+
+        // Perform the delete
+        String sql = "Delete from alias where key=?";
+        update(sql,key);
+    }
+    public void insertAdditionalInfo(ClinicalTrialAdditionalInfo info) throws Exception {
+        String sql="insert into clinical_trial_additional_info(nct_id, property_name,property_value)" +
+                "   values(?,?,?)";
+        update(sql, info.getNctId(),info.getPropertyName(),info.getPropertyValue());
+    }
+    public List<ClinicalTrialAdditionalInfo> getAdditionalInfo(String nctId, String propertyName) throws Exception {
+        String sql="select * from clinical_trial_additional_info where nct_id=? and property_name=? order by property_value";
+        ClinicalTrialAdditionalInfoQuery query=new ClinicalTrialAdditionalInfoQuery(this.getDataSource(), sql);
+        return execute(query, nctId, propertyName.toLowerCase());
+    }
+
+    public List<String> getDistinctPropertyValues(String propertyName) throws Exception{
+        String sql = "select distinct property_value from clinical_trial_additional_info where property_name=? order by property_value";
+        return StringListQuery.execute(this,sql,propertyName);
+    }
+
+    public void deleteAdditionalInfo(String nctId, String propertyName, String propertyValue) throws Exception{
+        String sql = "delete from clinical_trial_additional_info where nct_id=? and property_name=? and property_value=?";
+        update(sql, nctId, propertyName, propertyValue);
+    }
+
+    public List<String>getAllNctIds() throws Exception{
+        String sql = """
+                select nctid from clinical_trial_record
+                """;
+        return StringListQuery.execute(this,sql);
+    }
+
+    public List<String> getNctIdsByRecordStatus(String recordStatus) throws Exception {
+        String sql = "select nctid from clinical_trial_record where record_status = ?";
+        return StringListQuery.execute(this, sql, recordStatus);
+    }
+
+    // ==========================================
+    // FIELD CHANGE TRACKING METHODS
+    // ==========================================
+
+    /**
+     * Insert a single field change record into the history table
+     */
+    public void insertFieldChange(ClinicalTrialFieldChange change) throws Exception {
+        String sql = """
+            INSERT INTO clinical_trial_field_history
+            (nct_id, field_name, old_value, new_value, changed_at, update_date, update_by, ext_link_id)
+            VALUES (?, ?, ?, ?, NOW(), CAST(NULLIF(?, '') AS DATE), ?, ?)
+            """;
+        update(sql,
+            change.getNctId(),
+            change.getFieldName(),
+            change.getOldValue(),
+            change.getNewValue(),
+            change.getUpdateDate(),
+            change.getUpdateBy(),
+            change.getExtLinkId()
+        );
+    }
+    /**
+     * update a single field change record into the history table
+     */
+    public void updateFieldChange(ClinicalTrialFieldChange change) throws Exception {
+        if (change.getExtLinkId() != null) {
+            // For ext_link changes, match on ext_link_id
+            String sql = """
+                UPDATE clinical_trial_field_history
+                SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?, field_name=?
+                WHERE nct_id=? AND ext_link_id=?
+                """;
+            update(sql,
+                    change.getOldValue(),
+                    change.getNewValue(),
+                    change.getUpdateDate(),
+                    change.getUpdateBy(),
+                    change.getFieldName(),
+                    change.getNctId(),
+                    change.getExtLinkId());
+        } else {
+            // For regular field changes, match on field_name
+            String sql = """
+                UPDATE clinical_trial_field_history
+                SET old_value=?, new_value=?, changed_at=NOW(), update_date=CAST(NULLIF(?, '') AS DATE), update_by=?
+                WHERE nct_id=? AND field_name=?
+                """;
+            update(sql,
+                    change.getOldValue(),
+                    change.getNewValue(),
+                    change.getUpdateDate(),
+                    change.getUpdateBy(),
+                    change.getNctId(),
+                    change.getFieldName());
+        }
+    }
+    /**
+     * Insert multiple field changes in batch
+     */
+    public void insertFieldChanges(List<ClinicalTrialFieldChange> changes) throws Exception {
+        for (ClinicalTrialFieldChange change : changes) {
+            List<ClinicalTrialFieldChange> fieldChangeRecords=getClinicalTrialFieldChangeRecord(change);
+            if(fieldChangeRecords.size()>0) {
+               updateFieldChange(change);
+            }else{
+                insertFieldChange(change);
+            }
+        }
+    }
+
+    /**
+     * Get all field changes for a specific NCT ID
+     */
+    public List<ClinicalTrialFieldChange> getFieldChangesByNctId(String nctId) throws Exception {
+        String sql = """
+            SELECT * FROM clinical_trial_field_history
+            WHERE nct_id = ?
+            ORDER BY changed_at DESC
+            """;
+        ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+        return execute(query, nctId);
+    }
+
+    /**
+     * Get field changes for a specific field across all records
+     */
+    public List<ClinicalTrialFieldChange> getFieldChangesByFieldName(String fieldName) throws Exception {
+        String sql = """
+            SELECT * FROM clinical_trial_field_history
+            WHERE field_name = ?
+            ORDER BY changed_at DESC
+            """;
+        ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+        return execute(query, fieldName);
+    }
+
+    /**
+     * Get recent field changes (within last N days)
+     */
+    public List<ClinicalTrialFieldChange> getRecentFieldChanges(int days) throws Exception {
+        String sql = """
+            SELECT * FROM clinical_trial_field_history
+            WHERE changed_at >= NOW() - INTERVAL '%d days'
+            ORDER BY changed_at DESC
+            """.formatted(days);
+        ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+        return query.execute();
+    }
+
+    /**
+     * Get field changes for a specific NCT ID and field name
+     */
+    public List<ClinicalTrialFieldChange> getFieldChanges(String nctId, String fieldName) throws Exception {
+        String sql = """
+            SELECT * FROM clinical_trial_field_history
+            WHERE nct_id = ? AND field_name = ?
+            ORDER BY changed_at DESC
+            """;
+        ClinicalTrialFieldChangeQuery query = new ClinicalTrialFieldChangeQuery(this.getDataSource(), sql);
+        return execute(query, nctId, fieldName);
+    }
+
+    /**
+     * Compare two records and return list of manually curated field changes
+     */
+    public List<ClinicalTrialFieldChange> compareCuratedFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
+        List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+        String nctId = newRecord.getNctId();
+        LocalDate localDate = LocalDate.now();
+
+        // Convert the LocalDate to a java.sql.Date
+        java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+        String today = sqlDate.toString();
+
+        // Fields from updateCuratedDataFields()
+        compareField(changes, nctId, "target_gene", existing.getTargetGeneOrVariant(), newRecord.getTargetGeneOrVariant(), today, updateBy, false);
+        compareField(changes, nctId, "therapy_type", existing.getTherapyType(), newRecord.getTherapyType(), today, updateBy, false);
+        compareField(changes, nctId, "therapy_route", existing.getTherapyRoute(), newRecord.getTherapyRoute(), today, updateBy, false);
+        compareField(changes, nctId, "mechanism_of_action", existing.getMechanismOfAction(), newRecord.getMechanismOfAction(), today, updateBy, false);
+        compareField(changes, nctId, "route_of_administration", existing.getRouteOfAdministration(), newRecord.getRouteOfAdministration(), today, updateBy, false);
+        compareField(changes, nctId, "drug_product_type", existing.getDrugProductType(), newRecord.getDrugProductType(), today, updateBy, false);
+        compareField(changes, nctId, "target_tissue", existing.getTargetTissueOrCell(), newRecord.getTargetTissueOrCell(), today, updateBy, false);
+        compareField(changes, nctId, "delivery_system", existing.getDeliverySystem(), newRecord.getDeliverySystem(), today, updateBy, false);
+        compareField(changes, nctId, "vector_type", existing.getVectorType(), newRecord.getVectorType(), today, updateBy, false);
+        compareField(changes, nctId, "editor_type", existing.getEditorType(), newRecord.getEditorType(), today, updateBy, false);
+        compareField(changes, nctId, "dose_1", existing.getDose1(), newRecord.getDose1(), today, updateBy, false);
+        compareField(changes, nctId, "dose_2", existing.getDose2(), newRecord.getDose2(), today, updateBy, false);
+        compareField(changes, nctId, "dose_3", existing.getDose3(), newRecord.getDose3(), today, updateBy, false);
+        compareField(changes, nctId, "dose_4", existing.getDose4(), newRecord.getDose4(), today, updateBy, false);
+        compareField(changes, nctId, "dose_5", existing.getDose5(), newRecord.getDose5(), today, updateBy, false);
+        compareField(changes, nctId, "recent_updates", existing.getRecentUpdates(), newRecord.getRecentUpdates(), today, updateBy, false);
+        //compareField(changes, nctId, "patents", existing.getPatents(), newRecord.getPatents(), today, updateBy, false);
+        compareField(changes, nctId, "compound_name", existing.getCompoundName(), newRecord.getCompoundName(), today, updateBy, false);
+        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), today, updateBy, false);
+        compareField(changes, nctId, "record_status", existing.getRecordStatus(), newRecord.getRecordStatus(), today, updateBy, false);
+
+        // Fields from updateSomeNewFieldsDataFields()
+        compareField(changes, nctId, "development_status", existing.getDevelopmentStatus(), newRecord.getDevelopmentStatus(), today, updateBy, false);
+        compareField(changes, nctId, "indication_doid", existing.getIndicationDOID(), newRecord.getIndicationDOID(), today, updateBy, false);
+        compareField(changes, nctId, "compound_description", existing.getCompoundDescription(), newRecord.getCompoundDescription(), today, updateBy, false);
+
+        return changes;
+    }
+
+    /**
+     * Compare two alias records and return list of field changes
+     */
+    public List<ClinicalTrialFieldChange> compareAliasFields(Alias existing, Alias newAlias, String updateBy) {
+        List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+        String nctId = newAlias != null ? newAlias.getIdentifier() : (existing != null ? existing.getIdentifier() : null);
+        String today = java.time.LocalDate.now().toString();
+
+        String oldValue = existing != null ? existing.getAlias() : null;
+        String newValue = newAlias != null ? newAlias.getAlias() : null;
+        compareField(changes, nctId, "alias_value", oldValue, newValue, today, updateBy, false);
+
+        oldValue = existing != null ? existing.getAliasTypeLC() : null;
+        newValue = newAlias != null ? newAlias.getAliasTypeLC() : null;
+        compareField(changes, nctId, "alias_type", oldValue, newValue, today, updateBy, false);
+
+        oldValue = existing != null ? existing.getNotes() : null;
+        newValue = newAlias != null ? newAlias.getNotes() : null;
+        compareField(changes, nctId, "alias_notes", oldValue, newValue, today, updateBy, false);
+
+        return changes;
+    }
+
+    /**
+     * Compare two records and return list of field changes
+     */
+    public List<ClinicalTrialFieldChange> compareRecordsAPIFields(ClinicalTrialRecord existing, ClinicalTrialRecord newRecord, String updateBy) {
+        List<ClinicalTrialFieldChange> changes = new ArrayList<>();
+        String nctId = newRecord.getNctId();
+        LocalDate localDate = LocalDate.now();
+
+        // Convert the LocalDate to a java.sql.Date
+        java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
+        String updateDate = sqlDate.toString();
+
+        // Compare each tracked field
+        compareField(changes, nctId, "description", existing.getDescription(), newRecord.getDescription(), updateDate, updateBy);
+        compareField(changes, nctId, "intervention_name", existing.getInterventionName(), newRecord.getInterventionName(), updateDate, updateBy);
+        compareField(changes, nctId, "intervention_description", existing.getInterventionDescription(), newRecord.getInterventionDescription(), updateDate, updateBy);
+        compareField(changes, nctId, "sponsor", existing.getSponsor(), newRecord.getSponsor(), updateDate, updateBy);
+        compareField(changes, nctId, "sponsor_class", existing.getSponsorClass(), newRecord.getSponsorClass(), updateDate, updateBy);
+        compareField(changes, nctId, "phases", existing.getPhase(), newRecord.getPhase(), updateDate, updateBy);
+        compareField(changes, nctId, "enrollment_count", String.valueOf(existing.getEnrorllmentCount()), String.valueOf(newRecord.getEnrorllmentCount()), updateDate, updateBy);
+        compareField(changes, nctId, "enrollment_type", existing.getEnrollmentType(), newRecord.getEnrollmentType(), updateDate, updateBy);
+        compareField(changes, nctId, "locations", existing.getLocation(), newRecord.getLocation(), updateDate, updateBy);
+        compareField(changes, nctId, "number_of_locations", String.valueOf(existing.getNumberOfLocations()), String.valueOf(newRecord.getNumberOfLocations()), updateDate, updateBy);
+        compareField(changes, nctId, "eligibility_sex", existing.getEligibilitySex(), newRecord.getEligibilitySex(), updateDate, updateBy);
+
+        compareField(changes, nctId, "eligibility_criteria", existing.getEligibilityCriteria(), newRecord.getEligibilityCriteria(), updateDate, updateBy);
+
+        compareField(changes, nctId, "eligibility_min_age", existing.getElibilityMinAge(), newRecord.getElibilityMinAge(), updateDate, updateBy);
+        compareField(changes, nctId, "eligibility_max_age", existing.getElibilityMaxAge(), newRecord.getElibilityMaxAge(), updateDate, updateBy);
+        compareField(changes, nctId, "eligibility_std_age", existing.getStandardAge(), newRecord.getStandardAge(), updateDate, updateBy);
+        compareField(changes, nctId, "is_fda_regulated", existing.getIsFDARegulated(), newRecord.getIsFDARegulated(), updateDate, updateBy);
+        compareField(changes, nctId, "brief_title", existing.getBriefTitle(), newRecord.getBriefTitle(), updateDate, updateBy);
+        compareField(changes, nctId, "official_title", existing.getOfficialTitle(), newRecord.getOfficialTitle(), updateDate, updateBy);
+        compareField(changes, nctId, "overall_status", existing.getStudyStatus(), newRecord.getStudyStatus(), updateDate, updateBy);
+        compareField(changes, nctId, "first_submit_date", existing.getFirstSubmitDate(), newRecord.getFirstSubmitDate(), updateDate, updateBy);
+        compareField(changes, nctId, "estimated_completion_date", existing.getEstimatedCompleteDate(), newRecord.getEstimatedCompleteDate(), updateDate, updateBy);
+        compareField(changes, nctId, "last_update_post_date", existing.getLastUpdatePostDate(), newRecord.getLastUpdatePostDate(), updateDate, updateBy);
+        compareField(changes, nctId, "browse_condition_terms", existing.getBrowseConditionTerms(), newRecord.getBrowseConditionTerms(), updateDate, updateBy);
+        compareField(changes, nctId, "with_has_results", existing.getWithHasResults(), newRecord.getWithHasResults(), updateDate, updateBy);
+//        compareField(changes, nctId, "indication", existing.getIndication(), newRecord.getIndication(), updateDate, updateBy);
+
+        return changes;
+    }
+
+    /**
+     * Helper method to compare a single field and add to changes list if different
+     */
+    private void compareField(List<ClinicalTrialFieldChange> changes, String nctId, String fieldName,
+                              String oldValue, String newValue, String updateDate, String updateBy) {
+        compareField(changes, nctId, fieldName, oldValue, newValue, updateDate, updateBy, true);
+    }
+
+    /**
+     * manual curated fields don't need formatting. so overloaded this. Please do not remove this.
+     */
+    private void compareField(List<ClinicalTrialFieldChange> changes, String nctId, String fieldName,
+                              String oldValue, String newValue, String updateDate, String updateBy, boolean formatValues) {
+        // Normalize null and empty strings for comparison
+        String normalizedOld = normalizeValue(oldValue);
+        String normalizedNew = normalizeValue(newValue);
+
+        if (!Objects.equals(normalizedOld, normalizedNew)) {
+            ClinicalTrialFieldChange change;
+            if (formatValues) {
+                change = new ClinicalTrialFieldChange(nctId, fieldName, oldValue, newValue, updateBy);
+            } else {
+                change = new ClinicalTrialFieldChange();
+                change.setNctId(nctId);
+                change.setFieldName(fieldName);
+                change.setOldValue(oldValue);
+                change.setNewValue(newValue);
+                change.setUpdateBy(updateBy);
+            }
+            change.setUpdateDate(updateDate);
+            changes.add(change);
+        }
+    }
+
+    /**
+     * Normalize value for comparison (treat null and empty as equivalent)
+     */
+    private String normalizeValue(String value) {
+        if (value == null || value.trim().isEmpty() || value.equalsIgnoreCase("null")) {
+            return null;
+        }
+        return value.trim().toLowerCase();
+    }
+
+    /**
+     * Update API fields with change tracking - enhanced version
+     */
+    public String updateAPIFieldsWithTracking(ClinicalTrialRecord record, String updateBy) throws Exception {
+        ClinicalTrialRecord existingRecord = getSingleClinicalTrailRecordByNctId(record.getNctId());
+        if (existingRecord!=null) {
+            // Compare and get changes
+            List<ClinicalTrialFieldChange> changes = compareRecordsAPIFields(existingRecord, record, updateBy);
+
+            if (!changes.isEmpty()) {
+
+                // Log changes to history table
+                insertFieldChanges(changes);
+
+                // Build differences string for logging
+                StringBuilder differences = new StringBuilder();
+                for (ClinicalTrialFieldChange change : changes) {
+                    differences.append(change.getFieldName()).append(": ")
+                              .append(truncateForLog(change.getOldValue())).append(" -> ")
+                              .append(truncateForLog(change.getNewValue())).append("; ");
+                }
+
+                logger.info("UPDATES: " + record.getNctId() + "\t>>>\t" + differences);
+
+                // Update the main record
+                updateAPIDataFields(record);
+
+                return differences.toString();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Truncate value for logging
+     */
+    private String truncateForLog(String value) {
+        if (value == null) return "null";
+        return value.length() > 100 ? value.substring(0, 100) + "..." : value;
+    }
+
+    /**
+     * Get count of changes by field name (useful for analytics)
+     */
+    public int getFieldChangeCount(String fieldName) throws Exception {
+        String sql = "SELECT COUNT(*) FROM clinical_trial_field_history WHERE field_name = ?";
+        return getCount(sql, fieldName);
+    }
+
+    /**
+     * Get distinct NCT IDs that have had changes
+     */
+    public List<String> getNctIdsWithChanges() throws Exception {
+        String sql = "SELECT DISTINCT nct_id FROM clinical_trial_field_history ORDER BY nct_id";
+        return StringListQuery.execute(this, sql);
+    }
+
+    /**
+     * Delete old change history (for maintenance)
+     */
+    public int deleteOldFieldChanges(int daysToKeep) throws Exception {
+        String sql = "DELETE FROM clinical_trial_field_history WHERE changed_at < NOW() - INTERVAL '%d days'".formatted(daysToKeep);
+        return update(sql);
+    }
+
+    public List<ClinicalTrialFieldOption> getFieldOptions(String fieldName) throws Exception {
+
+        String sql= """
+               SELECT * FROM clinical_trial_field_option WHERE field_name=? AND is_active=true ORDER BY display_order, value
+                """;
+        ClinicalTrialFieldOptionQuery query=new ClinicalTrialFieldOptionQuery(this.getDataSource(), sql);
+        return execute(query,fieldName);
+    }
 }
