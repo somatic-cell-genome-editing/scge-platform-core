@@ -38,16 +38,36 @@ public class CTDResourceDAO extends AbstractDAO {
         return execute(query);
     }
     public List<CTDResource> getCTDResource(CTDResource resource) throws Exception {
-        String sql="select * from ctd_resources where ctd_section=?" +
-                "   and resource_name=? " +
-                "   and resource_url=? " +
-                "   and resource_description=? " +
-                "   and date_issued=?" +
-                "   and source=? " +
-                "   and type=? " +
-                "   and file_path=?" ;
+        // resource_url and file_path are optional and historically stored inconsistently
+        // (SQL NULL, the literal text 'null'/'(null)', '' or blanks). Collapse all of those
+        // to NULL on both the column and the bound parameter so duplicates are detected.
+        String urlExpr="(CASE WHEN TRIM(LOWER(COALESCE(resource_url,''))) IN ('','null','(null)') THEN NULL ELSE TRIM(resource_url) END)";
+        String filePathExpr="(CASE WHEN TRIM(LOWER(COALESCE(file_path,''))) IN ('','null','(null)') THEN NULL ELSE TRIM(file_path) END)";
+        String sql="select * from ctd_resources where ctd_section IS NOT DISTINCT FROM ?" +
+                "   and resource_name IS NOT DISTINCT FROM ? " +
+                "   and " + urlExpr + " IS NOT DISTINCT FROM ? " +
+                "   and resource_description IS NOT DISTINCT FROM ? " +
+                "   and date_issued IS NOT DISTINCT FROM ?" +
+                "   and source IS NOT DISTINCT FROM ? " +
+                "   and type IS NOT DISTINCT FROM ? " +
+                "   and " + filePathExpr + " IS NOT DISTINCT FROM ?" ;
         CTDResourceQuery query=new CTDResourceQuery(this.getDataSource(), sql);
-        return execute(query,resource.getCtdSection() ,resource.getResourceName(), resource.getResourceUrl(), resource.getResourceDescription(),  resource.getDateIssued()
-                ,resource.getSource(), resource.getType(),resource.getFilePath());
+        return execute(query,resource.getCtdSection() ,resource.getResourceName(), normalizeEmpty(resource.getResourceUrl()), resource.getResourceDescription(),  resource.getDateIssued()
+                ,resource.getSource(), resource.getType(),normalizeEmpty(resource.getFilePath()));
+    }
+
+    /**
+     * Normalizes the various "empty" representations (null, "", blanks, the literal
+     * "null"/"(null)") to a real null so they compare equal to a normalized column.
+     */
+    private String normalizeEmpty(String value){
+        if(value==null){
+            return null;
+        }
+        String v=value.trim();
+        if(v.isEmpty() || v.equalsIgnoreCase("null") || v.equalsIgnoreCase("(null)")){
+            return null;
+        }
+        return v;
     }
 }
