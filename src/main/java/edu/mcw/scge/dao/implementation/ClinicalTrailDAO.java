@@ -9,6 +9,7 @@ import edu.mcw.scge.datamodel.Alias;
 import edu.mcw.scge.datamodel.ClinicalTrialAdditionalInfo;
 import edu.mcw.scge.datamodel.ClinicalTrialExternalLink;
 import edu.mcw.scge.datamodel.ClinicalTrialFieldChange;
+import edu.mcw.scge.datamodel.ClinicalTrialFieldOption;
 import edu.mcw.scge.datamodel.ClinicalTrialRecord;
 
 import edu.mcw.scge.datamodel.clinicalTrialModel.Intervention;
