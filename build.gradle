@@ -42,11 +42,8 @@ dependencies {
 
     implementation group: 'javax.xml.parsers', name: 'jaxp-api', version: '1.4.5'
 
-    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.17.4'
-    implementation group: 'org.elasticsearch.client', name: 'transport', version: '7.17.4'
-    implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: '7.17.4'
-    implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.17.4'
-    implementation group: 'org.apache.lucene', name: 'lucene-core', version: '8.2.0'
+    implementation 'co.elastic.clients:elasticsearch-java:9.4.0'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-client:9.4.0'
 
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation group: 'log4j', name: 'log4j', version: '1.2.17'
