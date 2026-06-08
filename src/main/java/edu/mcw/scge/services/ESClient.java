@@ -8,7 +8,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +16,6 @@ import org.elasticsearch.client.RestClientBuilder;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class ESClient {
@@ -37,7 +35,7 @@ public class ESClient {
     private static final int CONNECT_TIMEOUT_MS = 5_000;
     private static final int SOCKET_TIMEOUT_MS = 120_000;
 
-    public static ElasticsearchClient init(){
+    public static void init(){
         if(client==null) {
             Properties props= getProperties();
             try{
@@ -75,13 +73,12 @@ public class ESClient {
 
                 restClient = restClientBuilder.build();
                 transport = new RestClientTransport(restClient, new JacksonJsonpMapper(JacksonConfiguration.MAPPER));
-                return new ElasticsearchClient(transport);
+               client= new ElasticsearchClient(transport);
             }catch (Exception e){
                 e.printStackTrace();
             }
 
         }
-        return client;
     }
     private static CredentialsProvider buildCredentialsProvider(Properties props) {
         String username = props.getProperty(USERNAME_KEY);
