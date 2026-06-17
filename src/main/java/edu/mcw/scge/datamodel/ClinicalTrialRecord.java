@@ -629,7 +629,7 @@ public class ClinicalTrialRecord {
             record.setTherapyType(StringUtils.capitalize(record.getTherapyType()));
         }catch (Exception e){}
         try {
-            record.setTherapyRoute(StringUtils.capitalize(record.getTherapyRoute()));
+          //  record.setTherapyRoute(StringUtils.capitalize(record.getTherapyRoute()));
         }catch(Exception e){}
         try {
             record.setMechanismOfAction(StringUtils.capitalize(record.getMechanismOfAction()));
