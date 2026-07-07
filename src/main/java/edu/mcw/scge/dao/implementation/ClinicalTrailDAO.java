@@ -5,12 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import edu.mcw.scge.dao.AbstractDAO;
 import edu.mcw.scge.dao.spring.*;
-import edu.mcw.scge.datamodel.Alias;
-import edu.mcw.scge.datamodel.ClinicalTrialAdditionalInfo;
-import edu.mcw.scge.datamodel.ClinicalTrialExternalLink;
-import edu.mcw.scge.datamodel.ClinicalTrialFieldChange;
-import edu.mcw.scge.datamodel.ClinicalTrialFieldOption;
-import edu.mcw.scge.datamodel.ClinicalTrialRecord;
+import edu.mcw.scge.datamodel.*;
 
 import edu.mcw.scge.datamodel.clinicalTrialModel.Intervention;
 import edu.mcw.scge.datamodel.clinicalTrialModel.Location;
@@ -373,7 +368,7 @@ public class ClinicalTrailDAO extends AbstractDAO {
             String responseStr = this.getResponseStr(fetchUri);
             if (responseStr != null) {
                 JSONObject jsonObject = new JSONObject(responseStr);
-               return insertClinicalTrialAPIObject(jsonObject.toString(), nctId, "curator");
+               return insertClinicalTrialAPIObject(jsonObject.toString(), nctId, "api");
             }
             return "error_no_response";
         }
