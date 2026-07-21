@@ -176,9 +176,13 @@ public class ClinicalTrailDAO extends AbstractDAO {
     public void updateSomeNewFieldsDataFields(ClinicalTrialRecord record) throws Exception {
         String sql = "update clinical_trial_record " +
                 "set development_status=?," +
-                "indication_doid=?, compound_name=?, compound_description=?, record_modified_date=NOW() where nctid=? ";
+                "indication_doid=?, compound_name=?, compound_description=?, " +
+                "regulatory_element=?, viral_vector_sub_type=?, non_viral_vector_type=?, " +
+                "record_modified_date=NOW() where nctid=? ";
         this.update(sql, record.getDevelopmentStatus(),
-                record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),record.getNctId().trim());
+                record.getIndicationDOID(),record.getCompoundName(),record.getCompoundDescription(),
+                record.getRegulatoryElement(),record.getViralVectorSubType(),record.getNonViralVectorType(),
+                record.getNctId().trim());
     }
     public void updateRecordStatus(ClinicalTrialRecord record) throws Exception {
         String sql = "update clinical_trial_record " +

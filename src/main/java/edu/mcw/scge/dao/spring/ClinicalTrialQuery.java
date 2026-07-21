@@ -79,6 +79,9 @@ public class ClinicalTrialQuery extends MappingSqlQuery<ClinicalTrialRecord> {
         }catch (Exception ignored){}
         Date recordCreationDate=rs.getDate("record_creation_date");
         if(!rs.wasNull()) record .setRecordCreationDate(recordCreationDate);
+        record.setRegulatoryElement(rs.getString("regulatory_element"));
+        record .setNonViralVectorType(rs.getString("non_viral_vector_type"));
+        record .setViralVectorSubType(rs.getString("viral_vector_sub_type"));
             return record.formatRecordValue(record);
     }
 
