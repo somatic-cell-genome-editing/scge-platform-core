@@ -69,6 +69,33 @@ public class ClinicalTrialRecord {
     private Date recordModifiedDate;
     private Date recordCreationDate;
     private String eligibilityCriteria;
+    private String nonViralVectorType;
+    private String viralVectorSubType;
+    private String regulatoryElement;
+
+    public String getNonViralVectorType() {
+        return nonViralVectorType;
+    }
+
+    public void setNonViralVectorType(String nonViralVectorType) {
+        this.nonViralVectorType = nonViralVectorType;
+    }
+
+    public String getViralVectorSubType() {
+        return viralVectorSubType;
+    }
+
+    public void setViralVectorSubType(String viralVectorSubType) {
+        this.viralVectorSubType = viralVectorSubType;
+    }
+
+    public String getRegulatoryElement() {
+        return regulatoryElement;
+    }
+
+    public void setRegulatoryElement(String regulatoryElement) {
+        this.regulatoryElement = regulatoryElement;
+    }
 
     public String getEligibilityCriteria() {
         return eligibilityCriteria;
@@ -619,76 +646,46 @@ public class ClinicalTrialRecord {
         return differences.toString();
     }
     public ClinicalTrialRecord formatRecordValue(ClinicalTrialRecord record){
-        try {
-            record.setTargetGeneOrVariant(StringUtils.capitalize(record.getTargetGeneOrVariant()));
-        }catch (Exception e){}
-        try {
-            record.setCompoundName(StringUtils.capitalize(record.getCompoundName()));
-        }catch (Exception e){}
-        try {
-            record.setTherapyType(StringUtils.capitalize(record.getTherapyType()));
-        }catch (Exception e){}
-        try {
-          //  record.setTherapyRoute(StringUtils.capitalize(record.getTherapyRoute()));
-        }catch(Exception e){}
-        try {
-            record.setMechanismOfAction(StringUtils.capitalize(record.getMechanismOfAction()));
-        }catch (Exception e){}
-        try {
-            record.setRouteOfAdministration(StringUtils.capitalize(record.getRouteOfAdministration()));
-        }catch (Exception e){}
-        try {
-            record.setDrugProductType(StringUtils.capitalize(record.getDrugProductType()));
-        }catch (Exception e){}
-        try {
-            record.setTargetTissueOrCell(StringUtils.capitalize(record.getTargetTissueOrCell()));
-        }catch (Exception e){}
-        try {
-            record.setDeliverySystem(StringUtils.capitalize(record.getDeliverySystem()));
-        }catch (Exception e){}
-        try {
-            if(!record.getDose1().equalsIgnoreCase("none"))
-                record.setDose1(StringUtils.capitalize(record.getDose1()));
-            else record.setDose1("");
-        }catch (Exception e){}
-        try {
-            if(!record.getDose2().equalsIgnoreCase("none"))
-                record.setDose2(StringUtils.capitalize(record.getDose2()));
-            else record.setDose2("");
-        }catch (Exception e){}
-        try {
-            if(!record.getDose3().equalsIgnoreCase("none"))
-                record.setDose3(StringUtils.capitalize(record.getDose3()));
-            else record.setDose3("");
-        }catch (Exception e){}
-        try {
-            if(!record.getDose4().equalsIgnoreCase("none"))
-                record.setDose4(StringUtils.capitalize(record.getDose4()));
-            else record.setDose4("");
-        }catch (Exception e){}
-        try {
-            if(!record.getDose5().equalsIgnoreCase("none"))
-                record.setDose5(StringUtils.capitalize(record.getDose5()));
-            else record.setDose5("");
-        }catch (Exception e){}
+        // StringUtils.capitalize is null-safe, so these need no guards.
+        record.setTargetGeneOrVariant(StringUtils.capitalize(record.getTargetGeneOrVariant()));
+        record.setCompoundName(StringUtils.capitalize(record.getCompoundName()));
+        record.setTherapyType(StringUtils.capitalize(record.getTherapyType()));
+        record.setMechanismOfAction(StringUtils.capitalize(record.getMechanismOfAction()));
+        record.setRouteOfAdministration(StringUtils.capitalize(record.getRouteOfAdministration()));
+        record.setDrugProductType(StringUtils.capitalize(record.getDrugProductType()));
+        record.setTargetTissueOrCell(StringUtils.capitalize(record.getTargetTissueOrCell()));
+        record.setDeliverySystem(StringUtils.capitalize(record.getDeliverySystem()));
 
-        try {
-            if(record.getIsFDARegulated()!=null && !record.getIsFDARegulated().equalsIgnoreCase("null"))
-                record.setIsFDARegulated(StringUtils.capitalize(record.getIsFDARegulated()));
-            else record.setIsFDARegulated("");
-        }catch (Exception e){}
-        try {
-            if(record.getRecentUpdates()!=null && !record.getRecentUpdates().equalsIgnoreCase("null"))
-                record.setRecentUpdates(StringUtils.capitalize(record.getRecentUpdates()));
+        record.setDose1(formatDose(record.getDose1()));
+        record.setDose2(formatDose(record.getDose2()));
+        record.setDose3(formatDose(record.getDose3()));
+        record.setDose4(formatDose(record.getDose4()));
+        record.setDose5(formatDose(record.getDose5()));
 
-        }catch (Exception e){}
+        record.setIsFDARegulated(capitalizeOrBlank(record.getIsFDARegulated()));
+        if(isPresent(record.getRecentUpdates())) record.setRecentUpdates(StringUtils.capitalize(record.getRecentUpdates()));
 
-        if(record.getStudyStatus()!=null && !record.getStudyStatus().equals("")) record.setStudyStatus(formatFieldVal(record.getStudyStatus()));
-        if(record.getSponsorClass()!=null && !record.getSponsorClass().equals("") && !record.getSponsorClass().equalsIgnoreCase("NIH")) record.setSponsorClass(formatFieldVal(record.getSponsorClass()));
-        if(record.getPhase()!=null && !record.getPhase().equals("")) record.setPhase(formatFieldVal(record.getPhase()));
-        if(record.getStandardAge()!=null && !record.getStandardAge().equals("")) record.setStandardAge(formatFieldVal(record.getStandardAge()));
-        if(record.getWithHasResults()!=null && !record.getWithHasResults().equals("")) record.setWithHasResults(formatFieldVal(record.getWithHasResults()));
+        if(StringUtils.isNotEmpty(record.getStudyStatus())) record.setStudyStatus(formatFieldVal(record.getStudyStatus()));
+        if(StringUtils.isNotEmpty(record.getSponsorClass()) && !record.getSponsorClass().equalsIgnoreCase("NIH")) record.setSponsorClass(formatFieldVal(record.getSponsorClass()));
+        if(StringUtils.isNotEmpty(record.getPhase())) record.setPhase(formatFieldVal(record.getPhase()));
+        if(StringUtils.isNotEmpty(record.getStandardAge())) record.setStandardAge(formatFieldVal(record.getStandardAge()));
+        if(StringUtils.isNotEmpty(record.getWithHasResults())) record.setWithHasResults(formatFieldVal(record.getWithHasResults()));
         return record;
+    }
+
+    /** "none" (any case) becomes blank; null stays null; otherwise capitalized. */
+    private static String formatDose(String dose){
+        if(dose == null) return null;
+        return dose.equalsIgnoreCase("none") ? "" : StringUtils.capitalize(dose);
+    }
+
+    /** Capitalizes a real value; null or the literal "null" becomes blank. */
+    private static String capitalizeOrBlank(String val){
+        return isPresent(val) ? StringUtils.capitalize(val) : "";
+    }
+
+    private static boolean isPresent(String val){
+        return val != null && !val.equalsIgnoreCase("null");
     }
 
     public String formatFieldVal(String fieldVal){
